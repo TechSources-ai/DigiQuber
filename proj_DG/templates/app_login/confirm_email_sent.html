@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6 text-center">
+        <h2>Confirmation Email Sent</h2>
+        <p>
+            A confirmation link has been sent to <strong>{{ email }}</strong>.<br>
+            Please check your inbox and follow the instructions to continue your registration.
+        </p>
+        <p>
+            If you do not receive the email, please check your spam folder or try signing up again.
+        </p>
+    </div>
+</div>
+{% endblock %}
