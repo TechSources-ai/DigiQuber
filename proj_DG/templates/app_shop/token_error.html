@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="mt-5 text-center">
+  <h2 class="text-danger">Token Error</h2>
+  <p>There was a problem retrieving the API token.</p>
+  <div class="alert alert-danger">
+    {{ error }}
+  </div>
+  <a href="{% url 'buy_now' %}" class="btn btn-secondary mt-3">Try Again</a>
