@@ -1,13 +1,52 @@
+<!-- filepath: c:\Users\DELL\OneDrive\Documents\WebProject\Firebase\proj_DG\app_user\templates\app_user\edit_profile.html -->
 {% extends "base.html" %}
 {% block content %}
 <div class="row justify-content-center mt-5">
-  <div class="col-md-6">
-    <h2>Complete Your Profile</h2>
-    <form method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit" class="btn btn-info">Complete Profile</button>
-    </form>
+  <div class="col-md-8">
+    <h2>Profile</h2>
+    {% if success %}
+      <div class="alert alert-success">Profile updated successfully!</div>
+    {% endif %}
+    {% if editing %}
+      <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label>Email</label>
+          {{ form.email }}
+        </div>
+        <div class="mb-3">
+          <label>Phone</label>
+          {{ form.phone }}
+        </div>
+        <div class="mb-3">
+          <label>Name</label>
+          {{ form.name }}
+        </div>
+        <div class="mb-3">
+          <label>Billing Address</label>
+          {{ form.billing_address }}
+        </div>
+        <div class="mb-3">
+          <label>Delivery Address</label>
+          {{ form.delivery_address }}
+        </div>
+        <div class="form-check mb-3">
+          {{ form.same_as_delivery }} <label class="form-check-label">Billing address is same as delivery</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </form>
+    {% else %}
+      <div class="mb-3"><strong>Email:</strong> {{ profile.user.email }}</div>
+      <div class="mb-3"><strong>Phone:</strong> {{ profile.user.phone }}</div>
+      <div class="mb-3"><strong>Name:</strong> {{ profile.name }}</div>
+      <div class="mb-3"><strong>Billing Address:</strong> {{ profile.billing_address }}</div>
+      <div class="mb-3"><strong>Delivery Address:</strong> {{ profile.delivery_address }}</div>
+      <div class="mb-3">
+        <strong>Billing address is same as delivery:</strong>
+        {% if profile.same_as_delivery %}Yes{% else %}No{% endif %}
+      </div>
+      <a href="?edit=true" class="btn btn-secondary">Edit</a>
+    {% endif %}
   </div>
 </div>
 {% endblock %}

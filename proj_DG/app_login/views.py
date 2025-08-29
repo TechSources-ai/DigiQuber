@@ -103,12 +103,12 @@ def create_password_view(request):
             # Remove confirmation from session
             request.session.pop('confirmed_email', None)
             request.session.pop('confirmed_phone', None)
-            return redirect('complete_profile')
+            return redirect('complete_details')
     else:
         form = PasswordForm()
     return render(request, 'app_login/create_password.html', {'form': form})
 
-def complete_profile_view(request):
+def complete_details_view(request):
     user_id = request.session.get('user_id')
     if not user_id:
         return redirect('signup')
@@ -120,7 +120,7 @@ def complete_profile_view(request):
             return redirect('signin')
     else:
         form = ProfileForm(instance=user)
-    return render(request, 'app_user/profile.html', {'form': form})
+    return render(request, 'app_login/update_details.html', {'form': form})
 
 def signin_view(request):
     if request.method == 'POST':
