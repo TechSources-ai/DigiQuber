@@ -19,17 +19,17 @@ def edit_profile_view(request):
             profile.user = user
             # Handle "same as delivery" logic
             if form.cleaned_data.get('same_as_delivery'):
-                profile.billing_address = form.cleaned_data.get('delivery_address')
+                profile.billingAddress = form.cleaned_data.get('deliveryAddress')
             profile.save()
-            return redirect('/app_user/edit-profile/?success=true')
+            return redirect('edit_profile')  # Use named URL, not hardcoded path
+        else:
+            print(form.errors)
     else:
         form = ProfileForm(instance=profile, user=user)
 
     if editing or not profile:
-        # Show editable form
         return render(request, 'app_user/profile.html', {'form': form, 'editing': True})
     else:
-        # Show profile details and success message if applicable
         return render(request, 'app_user/profile.html', {
             'profile': profile,
             'editing': False,

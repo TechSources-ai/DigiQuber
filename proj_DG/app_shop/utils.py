@@ -1,9 +1,36 @@
 import json
 import base64
 import requests
+from .models import APIToken
+from django.utils import timezone
 from django.conf import settings
 from .api_config import ExternalAPI
 from requests.exceptions import RequestException
+from datetime import datetime, timedelta
+
+TOKEN_VALIDITY_MINUTES = 10
+
+def get_token():
+    try:
+        token_obj = APIToken.objects.latest('created_at')
+        if timezone.now() < token_obj.created_at + timedelta(minutes=TOKEN_VALIDITY_MINUTES):
+            return token_obj
+        else:
+            status_code, new_token = auth_api()
+            if status_code == 200 and new_token:
+                token_obj = APIToken.objects.create(token=new_token)
+                return token_obj
+            else:
+                # print("Failed to refresh token")
+                return render(request, 'app_shop/token_error.html', {'error': auth_res.get('error')})
+    except APIToken.DoesNotExist:
+        status_code, new_token = auth_api()
+        if status_code == 200 and new_token:
+            token_obj = APIToken.objects.create(token=new_token)
+            return token_obj
+        else:
+            # print("Failed to obtain initial token")
+            return render(request, 'app_shop/token_error.html', {'error': auth_res.get('error')})
 
 def make_post(token, endpoint, payload):
     base_url = ExternalAPI.EXTERNAL_APIS['BASE_URL']
@@ -53,6 +80,21 @@ def auth_api():
     data = json.loads(response.text)  # Converts JSON string → dict
     token = data.get('sessionId')
 
-    print("Status Code:", response.status_code)
-    print("Response Body:", token)
+    # print("Status Code:", response.status_code)
+    # print("Response Body:", token)
     return response.status_code, token
+
+# # Check for a valid token
+#     now = timezone.now()
+#     valid_since = now - timedelta(minutes=TOKEN_VALIDITY_MINUTES)
+#     token_obj = APIToken.objects.filter(created_at__gte=valid_since).order_by('-created_at').first()
+
+#     if not token_obj:
+#         # Request new token from API
+#         auth_status, auth_res = auth_api()
+#         if auth_status == 200:
+#             token_obj = APIToken.objects.create(token=auth_res)
+#             token_obj.save()
+#             print("Response Body:", token_obj.token)
+#         else:
+#             return render(request, 'app_shop/token_error.html', {'error': auth_res.get('error')})
