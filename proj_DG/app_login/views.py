@@ -6,6 +6,7 @@ from django.conf import settings
 from django.contrib.auth import authenticate, login
 from .forms import SignupForm, PasswordForm, ProfileForm, SigninForm
 from .models import CustomUser
+from django.contrib.auth import logout
 
 def is_email_or_phone(value):
     # Simple check for email
@@ -20,7 +21,7 @@ def home_view(request):
     return render(request, 'home.html')
 
 def send_confirmation_email(email, token):
-    link = f"http://localhost:8000/auth/confirm-email/?token={token}"
+    link = f"http://localhost:8000/confirm-email/?token={token}"
     send_mail(
         'Confirm your email',
         f'Click the link to confirm your email: {link}',
@@ -143,3 +144,7 @@ def signin_view(request):
     else:
         form = SigninForm()
     return render(request, 'app_login/signin.html', {'form': form})
+
+def logout_view(request):
+    logout(request)
+    return redirect('home')  # or redirect to homepage

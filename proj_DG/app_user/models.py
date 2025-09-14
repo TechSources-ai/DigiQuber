@@ -12,8 +12,8 @@ class Profile(models.Model):
     nameProofId = models.CharField(max_length=100, blank=True, null=True)
     addressProofId = models.CharField(max_length=100, blank=True, null=True)
     dob = models.DateField(blank=True, null=True)
-    billingAddress = models.TextField()
-    deliveryAddress = models.TextField()
+    billingAddress = models.JSONField(default=dict)
+    deliveryAddress = models.JSONField(default=dict)
     same_as_delivery = models.BooleanField(default=False)  # True if billing address is same as delivery
 
     def save(self, *args, **kwargs):

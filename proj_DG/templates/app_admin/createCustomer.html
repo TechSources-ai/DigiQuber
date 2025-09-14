@@ -8,6 +8,7 @@
                 <th>Name</th>
                 <th>Reference Number</th>
                 <th>Create Profile</th>
+                <th>Get Profile</th>
             </tr>
         </thead>
         <tbody>
@@ -21,6 +22,12 @@
                         <button type="submit">Create</button>
                     </form>
                 </td>
+                <td>
+                    <form method="post" action="{% url 'fetch_profile' customer.customerRefNo %}">
+                        {% csrf_token %}
+                        <button type="submit">Get</button>
+                    </form>
+                </td>
             </tr>
             {% empty %}
             <tr>
@@ -29,6 +36,10 @@
             {% endfor %}
         </tbody>
     </table>
+    <form method="post" action="{% url 'update' %}">
+        {% csrf_token %}
+        <button type="submit">Update</button>
+    </form>
 </body>
 {% endblock %}
 

@@ -8,5 +8,5 @@ class ExternalAPI:
         'PORTFOLIO_ENDPOINT': '/customer/getPortfolio',
         'GET_PROFILE_ENDPOINT': '/oat/getProfile',
         'GOLD_PRICE_ENDPOINT': '/PRICE/XAU/INR',
-        'GOLD_PRICE_ENDPOINT': '/PRICE/XAG/INR',
+        'SILVER_PRICE_ENDPOINT': '/PRICE/XAG/INR',
         }

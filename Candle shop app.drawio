@@ -1,0 +1,121 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36" version="28.2.0">
+  <diagram name="Page-1" id="6b0nMPlWJEH36SlU-6zb">
+    <mxGraphModel dx="786" dy="451" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="bosw1-g5eppriJeeMcJX-2" value="Django_project" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="40" y="490" width="400" height="290" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-3" value="Login" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="55" y="523" width="120" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-4" value="model" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="70" y="553" width="90" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-5" value="form" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="70" y="575" width="90" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-6" value="view" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="70" y="598" width="90" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-7" value="urls.py" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="70" y="623" width="90" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-8" value="Profile" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="185" y="523" width="120" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-9" value="model" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="201" y="552" width="90" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-10" value="form" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="201" y="574" width="90" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-11" value="view" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="201" y="597" width="90" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-12" value="urls.py" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="201" y="622" width="90" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-13" value="Templates" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="55" y="683" width="120" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-14" value="Login" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="74" y="709" width="90" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-15" value="Profile" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="74" y="731" width="90" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-16" value="static" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="186" y="683" width="120" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-17" value="CSS" style="rounded=0;whiteSpace=wrap;html=1;align=center;" parent="1" vertex="1">
+          <mxGeometry x="212" y="703" width="70" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-18" value="JS" style="rounded=0;whiteSpace=wrap;html=1;align=center;" parent="1" vertex="1">
+          <mxGeometry x="211" y="726" width="70" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-19" value="IMG" style="rounded=0;whiteSpace=wrap;html=1;align=center;" parent="1" vertex="1">
+          <mxGeometry x="211" y="749" width="70" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-20" value="URLs.py" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="345" y="510" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-21" value="settings.py" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="345" y="539" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-22" value="manage.py" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="345" y="574" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-33" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="bosw1-g5eppriJeeMcJX-23" target="bosw1-g5eppriJeeMcJX-24" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-38" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="bosw1-g5eppriJeeMcJX-23" target="bosw1-g5eppriJeeMcJX-29" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-23" value="&lt;b&gt;Index&lt;/b&gt;&lt;div&gt;About US,&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Contact Us,&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;FAQ&lt;/span&gt;&lt;/div&gt;&lt;div&gt;Privacy,&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Terms,&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Review&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="320.5" y="123" width="219" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-30" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="bosw1-g5eppriJeeMcJX-24" target="bosw1-g5eppriJeeMcJX-25" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-24" value="&lt;div&gt;&lt;b&gt;Product page&lt;/b&gt;&lt;/div&gt;&lt;div&gt;List&lt;span style=&quot;color: rgba(0, 0, 0, 0); font-family: monospace; font-size: 0px; text-align: start; text-wrap-mode: nowrap; background-color: transparent;&quot;&gt;aphModel%3E%3Croot%3E%3CmxCell%20id%3D%220%22%2F%3E%3CmxCell%20id%3D%221%22%20parent%3D%220%22%2F%3E%3CmxCell%20id%3D%222%22%20value%3D%22URLs.py%22%20style%3D%22text%3Bhtml%3D1%3Balign%3Dcenter%3BverticalAlign%3Dmiddle%3BwhiteSpace%3Dwrap%3Brounded%3D0%3B%22%20vertex%3D%221%22%20parent%3D%221%22%3E%3CmxGeometry%20x%3D%22530%22%20y%3D%2280%22%20width%3D%2260%22%20height%3D%2230%22%20as%3D%22geometry%22%2F%3E%3C%2FmxCell%3E%3C%2Froot%3E%3C%2FmxGraphModel%3E&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="40" y="283" width="119" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="bosw1-g5eppriJeeMcJX-25" target="bosw1-g5eppriJeeMcJX-29" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-40" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.75;exitY=1;exitDx=0;exitDy=0;" parent="1" source="bosw1-g5eppriJeeMcJX-25" target="bosw1-g5eppriJeeMcJX-26" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-25" value="&lt;div&gt;&lt;b&gt;Cart&lt;/b&gt;&lt;/div&gt;&lt;div&gt;Add / delete / modify&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="200" y="283" width="120" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-41" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.75;exitY=1;exitDx=0;exitDy=0;" parent="1" source="bosw1-g5eppriJeeMcJX-26" target="bosw1-g5eppriJeeMcJX-27" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-26" value="&lt;div&gt;&lt;b&gt;Checkout&lt;/b&gt;&lt;/div&gt;&lt;div&gt;Add Address, Payment&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="370" y="283" width="120" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-42" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.75;exitY=1;exitDx=0;exitDy=0;" parent="1" source="bosw1-g5eppriJeeMcJX-27" target="bosw1-g5eppriJeeMcJX-28" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-27" value="&lt;b&gt;Confirmation&amp;nbsp;&lt;/b&gt;&lt;div&gt;email / order detail&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="539.5" y="283" width="120" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-28" value="&lt;b&gt;Account&lt;/b&gt;&lt;div&gt;Profile, Order History&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="690" y="283" width="120" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-39" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" parent="1" source="bosw1-g5eppriJeeMcJX-29" target="bosw1-g5eppriJeeMcJX-25" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-29" value="Login / signup&lt;div&gt;Social login&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="291" y="203" width="120" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="bosw1-g5eppriJeeMcJX-43" value="Candle Shop" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="365" y="42" width="120" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

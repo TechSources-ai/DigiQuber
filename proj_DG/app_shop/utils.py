@@ -13,38 +13,50 @@ TOKEN_VALIDITY_MINUTES = 10
 def get_token():
     try:
         token_obj = APIToken.objects.latest('created_at')
+        print("Existing token found:", token_obj.token)
         if timezone.now() < token_obj.created_at + timedelta(minutes=TOKEN_VALIDITY_MINUTES):
             return token_obj
         else:
+            print("Token expired, refreshing...")
             status_code, new_token = auth_api()
             if status_code == 200 and new_token:
                 token_obj = APIToken.objects.create(token=new_token)
+                print("New token obtained:", token_obj.token)
                 return token_obj
             else:
                 # print("Failed to refresh token")
                 return render(request, 'app_shop/token_error.html', {'error': auth_res.get('error')})
     except APIToken.DoesNotExist:
+        print("No existing token, obtaining new one...")
         status_code, new_token = auth_api()
         if status_code == 200 and new_token:
             token_obj = APIToken.objects.create(token=new_token)
+            print("New token obtained:", token_obj.token)
             return token_obj
         else:
             # print("Failed to obtain initial token")
             return render(request, 'app_shop/token_error.html', {'error': auth_res.get('error')})
 
-def make_post(token, endpoint, payload):
+def make_post(token, endpoint, payload, fetchId=None, fetchVal=None):
     base_url = ExternalAPI.EXTERNAL_APIS['BASE_URL']
     ep = ExternalAPI.EXTERNAL_APIS[endpoint]
     url = f"{base_url}{ep}"
-
+    print("Making POST request to:", ep)
     headers = {
-        'Accept': 'application/json',
-        'Cookie': f'sessionId={token}',
-        'Content-Type': 'application/json',
-        }
+            'Accept': 'application/json',
+            'Cookie': f'sessionId={token}',
+            'Content-Type': 'application/json',
+            }
+    if fetchId is not None and fetchId == "mobile":
+        headers['mobileNumber'] = fetchVal
+    elif fetchId is not None and fetchId == "customerRefNo":
+        headers['customerRefNo'] = fetchVal
+    else:
+        pass
+    print(headers)
     try:
         response = requests.post(url, json=payload, headers=headers)
-        # Handle response
+        print(response)
         if response.status_code == 200:
             data = response.json()  # Or response.text, depending on API
             # print("Status Code:", response.status_code)
@@ -84,17 +96,3 @@ def auth_api():
     # print("Response Body:", token)
     return response.status_code, token
 
-# # Check for a valid token
-#     now = timezone.now()
-#     valid_since = now - timedelta(minutes=TOKEN_VALIDITY_MINUTES)
-#     token_obj = APIToken.objects.filter(created_at__gte=valid_since).order_by('-created_at').first()
-
-#     if not token_obj:
-#         # Request new token from API
-#         auth_status, auth_res = auth_api()
-#         if auth_status == 200:
-#             token_obj = APIToken.objects.create(token=auth_res)
-#             token_obj.save()
-#             print("Response Body:", token_obj.token)
-#         else:
-#             return render(request, 'app_shop/token_error.html', {'error': auth_res.get('error')})

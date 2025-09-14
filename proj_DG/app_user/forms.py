@@ -20,8 +20,8 @@ class ProfileForm(forms.ModelForm):
         model = Profile
         fields = [
             'name',
-            'billingAddress',
-            'deliveryAddress',
+            # 'billingAddress',
+            # 'deliveryAddress',
             'same_as_delivery',
             'kycStatus',
             'nameProofType',
@@ -38,4 +38,4 @@ class ProfileForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if user:
             self.fields['email'].initial = user.email
-            self.fields['phone'].initial
+            self.fields['phone'].initial = user.phone

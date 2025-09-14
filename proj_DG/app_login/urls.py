@@ -9,4 +9,5 @@ urlpatterns = [
     path('signin/', views.signin_view, name='signin'),
     path('confirm-email/', views.confirm_email_view, name='confirm_email'),  # Add this line
     path('confirm-phone/', views.confirm_phone_view, name='confirm_phone'),  # If you use phone OTP
+    path('logout/', views.logout_view, name='logout'),
 ]
