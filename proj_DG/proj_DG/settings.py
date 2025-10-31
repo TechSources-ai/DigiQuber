@@ -26,6 +26,8 @@ PARTNER_ID = env('partner_id')
 USR_ID = env('usr_id')
 PASSWORD = env('password')
 BASE_URL = env('base_url')
+RAZORPAY_KEY_ID = env('RAZORPAY_KEY_ID')
+RAZORPAY_KEY_SECRET = env('RAZORPAY_KEY_SECRET')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 

@@ -1,0 +1,57 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #f4f4f9;
+}
+.container {
+    max-width: 400px;
+    margin: 0 auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+div.onegm {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+/* label {
+    flex: 0 0 200px;
+    white-space: nowrap;
+    text-align: right;
+    margin-right: 10px;
+}
+
+input[type="number"], input[type="text"] {
+    flex: 1;
+} */
+
+input:focus {
+    border-color: #5cb85c;
+    outline: none;
+}
+
+#taxAmount {
+    background-color: #e9ecef; /* Light gray background for read-only feel */
+    font-weight: bold;
+    color: #28a745; /* Green text for the final total */
+}
+#cgstAmt {
+    background-color: #e9ecef; /* Light gray background for read-only feel */
+    font-weight: bold;
+    color: #28a745; /* Green text for the final total */
+}
+#sgstAmt {
+    background-color: #e9ecef; /* Light gray background for read-only feel */
+    font-weight: bold;
+    color: #28a745; /* Green text for the final total */
+}
+#totalAmount {
+    background-color: #e9ecef; /* Light gray background for read-only feel */
+    font-weight: bold;
+    color: #28a745; /* Green text for the final total */
+}

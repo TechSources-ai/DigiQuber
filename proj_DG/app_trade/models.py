@@ -9,19 +9,24 @@ from django.contrib.auth.models import User
 class Quote(models.Model):
     user = models.ForeignKey(CustomUser, null=True, blank=True, on_delete=models.SET_NULL)
     customerRefNo = models.CharField(max_length=512, null=True, blank=True)
-    sessionKey = models.CharField(max_length=40, null=True, blank=True)
     currencyPair = models.CharField(max_length=10)
-    basePrice = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
+    calculationType = models.CharField(max_length=1, default='A', null=True, blank=True)  # 'A' for Amount, 'Q' for Quantity
+    preTaxAmt = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
     quantity = models.DecimalField(max_digits=10, decimal_places=4, default=1.0000)
-    value = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
+    totalAmt = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
     tax1Perc = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
     tax2Perc = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
     tax3Perc = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
+    tax1Perc = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
+    tax2Perc = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
+    tax3Perc = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
+    transactionDate = models.DateTimeField(null=True, blank=True)
+    transactionOrderID = models.CharField(max_length=512, null=True, blank=True)
     isValidated = models.BooleanField(default=False)
     createdAt = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Quote #{self.id} - {self.sessionKey}"
+        return f"Quote #{self.id} - {self.quantity}"
 
 
 class TradeBuy(models.Model):
@@ -40,10 +45,12 @@ class TradeBuy(models.Model):
     transactionDate = models.DateTimeField(null=True, blank=True)
     transactionOrderID = models.CharField(max_length=512, null=True, blank=True)
     totalAmount = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
+    quoteValidityTime = models.IntegerField(null=True, blank=True)
+    createdAt = models.DateTimeField(blank=True, null=True)
 
     #quantity should be calculated field in this model based on value and preTaxAmount
     def save(self, *args, **kwargs):
-        if self.calculationType == 'A' and self.preTaxAmount and self.preTaxAmount > 0:
+        if self.calculationType == 'A' and self.preTaxAmount > 0:
             self.quantity = self.value / self.preTaxAmount
         elif self.calculationType == 'A' and self.preTaxAmount and self.preTaxAmount > 0:
             self.value = self.quantity * self.preTaxAmount

@@ -55,11 +55,16 @@ def make_post(endpoint, payload, fetchId=None, fetchVal=None):
 
     try:
         response = requests.post(url, json=payload, headers=headers)
+        # print("Request URL:", url)
+        # print("###############################################################")
+        # print("Request Headers:", headers)
+        # print("###############################################################")
+        # print("Request Payload:", payload)
         # print("Status Code:", response.status_code)
         # print("###############################################################")
         # print("Response recieved:", response)
         # print("###############################################################")
-        # # print("Response Content-Type:", response.headers['Content-Type'])
+        # print("Response Content-Type:", response.headers['Content-Type'])
         # print(response.text) 
         # print("###############################################################")
         
@@ -119,3 +124,6 @@ def auth_api():
     # print("Response Body:", token)
     return response.status_code, token
 
+def generate_transaction_ref(csRefNo, session):
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    return f"TRX-{csRefNo}-{session}-{timestamp}"

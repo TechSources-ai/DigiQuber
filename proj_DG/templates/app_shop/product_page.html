@@ -8,10 +8,10 @@
       <h5 class="card-title">Gold</h5>
       <h6 class="card-subtitle mb-2 text-muted">Today's Price</h6>
       <p class="card-text"><strong>{{ price }}</strong></p>
-      <a href="{% url 'quote' %}" class="card-link">Buy</a>
-      <a href="#" class="card-link">Sell</a>
-      <a href="#" class="card-link">Loan</a>
-      <a href="#" class="card-link">Lease</a>
+      <a href="{% url 'inquiry' 'BuyGold' %}" class="card-link">Buy</a>
+      <a href="{% url 'inquiry' 'SellGold' %}" class="card-link">Sell</a>
+      <a href="{% url 'inquiry' 'LoanGold' %}" class="card-link">Loan</a>
+      <a href="{% url 'inquiry' 'LeaseGold' %}" class="card-link">Lease</a>
     </div>
   </div>
 </div>

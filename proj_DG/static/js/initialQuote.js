@@ -1,87 +1,65 @@
-// Initially disable inputs
-function disableInputs() {
-    document.getElementById('quantity').readOnly = true;
-    document.getElementById('today-price').readOnly = true;
-    document.getElementById('pre-tax-amount').readOnly = true;
-    document.getElementById('tax1-amt').readOnly = true;
-    document.getElementById('tax2-amt').readOnly = true;
-    document.getElementById('total-tax-amt').readOnly = true;
-    document.getElementById('total-amt').readOnly = true;
+function calculateTax() {
+
+    const quoteData = document.getElementById('quote-data');
+    const ptaInput = document.getElementById('pta');
+    const cgstOutput = document.getElementById('cgstAmt');
+    const sgstOutput = document.getElementById('sgstAmt');
+    const taxAmountOutput = document.getElementById('taxAmount');
+    const totalAmountOutput = document.getElementById('totalAmount');
+
+    const preTaxAmt = parseFloat(ptaInput.value) || 0;
+    const cgstRate = quoteData.dataset.cgst || 0;
+    const sgstRate = quoteData.dataset.sgst || 0;
+
+    // Calculate tax and total
+    const cgstAmt = preTaxAmt * (cgstRate / 100);
+    const sgstAmt = preTaxAmt * (sgstRate / 100);
+    const taxAmt = cgstAmt + sgstAmt;
+    const totalAmount = preTaxAmt + taxAmt;
+
+    // Update the output boxes
+    cgstOutput.value = cgstAmt.toFixed(2);
+    sgstOutput.value = sgstAmt.toFixed(2);
+    taxAmountOutput.value = taxAmt.toFixed(2);
+    totalAmountOutput.value = totalAmount.toFixed(2);
 }
 
-function enableInputs() {
-    document.getElementById('quantity').readOnly = false;
-    document.getElementById('pre-tax-amount').readOnly = false;
-    document.getElementById('edit-quote').hidden = true;
-}
+// Single handler function to manage all core input boxes
+function handleInput(changedId) {
+    // 1. Get ALL core values
+    const quote = document.getElementById('quote-data');
+    const qtyInput = document.getElementById('qty');
+    const ptaInput = document.getElementById('pta');
+    
+    const unitPrice = parseFloat(quote.dataset.unitPrice);
+    console.log("Unit Price from dataset:", unitPrice);
+    let priceVal = unitPrice || 0;
+    let qtyVal = parseFloat(qtyInput.value) || 0;
+    let ptaVal = parseFloat(ptaInput.value) || 0;
 
-document.addEventListener('DOMContentLoaded', function () {
-    const quoteDiv = document.getElementById('quote-data');
+    // 2. Decide what to calculate based on which box was edited
+    if (changedId === 'qty') {
+        // User edited Quantity: Recalculate PTA
+        ptaVal = priceVal * qtyVal;
+        ptaInput.value = ptaVal.toFixed(2);
 
-    const tax1Perc = parseFloat(quoteDiv.dataset.tax1Perc);
-    const tax2Perc = parseFloat(quoteDiv.dataset.tax2Perc);
-    const unitPrice = parseFloat(quoteDiv.dataset.unitPrice);
-
-    const quantityInput = document.getElementById('quantity');
-    const preTaxInput = document.getElementById('pre-tax-amount');
-
-    const tax1AmtInput = document.getElementById('tax1-amt');
-    const tax2AmtInput = document.getElementById('tax2-amt');
-    const totalTaxInput = document.getElementById('total-tax-amt');
-    const totalAmountInput = document.getElementById('total-amt');
-
-    function recalculateFromQuantity() {
-        let quantity = parseFloat(quantityInput.value);
-        if (isNaN(quantity) || quantity <= 0) return;
-        console.log(unitPrice);
-        let preTaxAmount = quantity * unitPrice;
-        updateAll(preTaxAmount, quantity);
-    }
-
-    function recalculateFromPreTax() {
-        let preTaxAmount = parseFloat(preTaxInput.value);
-        if (isNaN(preTaxAmount) || unitPrice === 0) return;
-
-        let quantity = preTaxAmount / unitPrice;
-
-        updateAll(preTaxAmount, quantity);
-    }
-
-    function updateAll(preTaxAmount, quantity) {
-        if (isNaN(preTaxAmount) || isNaN(quantity)) return;
-
-        const tax1Amt = (preTaxAmount * tax1Perc) / 100;
-        const tax2Amt = (preTaxAmount * tax2Perc) / 100;
-        const totalTaxAmt = tax1Amt + tax2Amt;
-        const totalAmount = preTaxAmount + totalTaxAmt;
-
-        // Only update if all values are valid
-        if (
-            !isNaN(tax1Amt) && !isNaN(tax2Amt) &&
-            !isNaN(totalTaxAmt) && !isNaN(totalAmount)
-        ) {
-            quantityInput.value = quantity.toFixed(4);
-            preTaxInput.value = preTaxAmount.toFixed(2);
-            tax1AmtInput.value = tax1Amt.toFixed(2);
-            tax2AmtInput.value = tax2Amt.toFixed(2);
-            totalTaxInput.value = totalTaxAmt.toFixed(2);
-            totalAmountInput.value = totalAmount.toFixed(2);
+    } else if (changedId === 'pta') {
+        // User edited PTA: Recalculate the Quantity
+        if (priceVal > 0) {
+            qtyVal = ptaVal / priceVal; // Quantity = PTA / Price
+            qtyInput.value = qtyVal.toFixed(2);
+        } else {
+            // If Price is zero, assume Quantity is zero
+            qtyInput.value = 0;
+            // Optionally, you could recalculate price instead: priceVal = ptaVal / qtyVal
         }
     }
+    // This executes the tax calculation based on the new PTA value
+    calculateTax();
+}
 
-
-    // Event listeners
-    quantityInput.addEventListener('input', recalculateFromQuantity);
-    preTaxInput.addEventListener('input', recalculateFromPreTax);
-
-    // Edit button
-    document.getElementById('edit-quote').addEventListener('click', function (e) {
-        e.preventDefault();  // prevent the default link action
-        enableInputs();
-        document.getElementById('validate-quote').style.display = 'inline-block';
-        // document.getElementById('edit-quote').style.display = 'dissabled';
-    });
-
-    // Initial state
-    disableInputs();
-});
+// Initial calculation on page load
+// window.onload = () => {
+//     handleInput('pta'); // Run the handler to set initial PTA/Qty relationship
+//     calculateTax();      // Run the tax calculation
+// };

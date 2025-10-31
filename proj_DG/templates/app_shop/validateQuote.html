@@ -29,6 +29,10 @@
             <tr><td>Total Amount</td><td>{{ estimate.totalAmount }}</td></tr>
         </table>
     </div>
+    <div style="margin-top: 10px; text-align: center;"><p>Quote ID: {{ estimate.quoteId }}</p></div>
+    <div style="margin-top: 10px; text-align: center;"><p>Transaction Ref No: {{ estimate.transactionRefNo }}</p></div>
+    <div style="margin-top: 10px; text-align: center;"><p>Customer Ref No: {{ estimate.customerRefNo }}</p></div>
+    <div style="margin-top: 10px; text-align: center;"><p>Created At: {{ estimate.createdAt }}</p></div>
     
     {% else %}
         <p>No estimate data available.</p>

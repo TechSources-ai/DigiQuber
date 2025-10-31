@@ -7,12 +7,17 @@ from django.utils import timezone
 from app_user.models import Profile
 from django.contrib import messages
 from .models import APIToken, Balance
-from django.shortcuts import render, redirect
-from .utils import auth_api, make_post, get_token
+from app_trade.models import TradeBuy
+from app_trade.views import saveQuote
+from django.shortcuts import render, redirect, get_object_or_404
+from .utils import auth_api, make_post, get_token, generate_transaction_ref
 
-def buy_now_view(request):
-    if not request.user.is_authenticated:
-        return redirect('signin')  # Use your login URL name
+def product_page_view(request):
+    return render(request, 'app_shop/product_page.html')
+
+def chk_price_view(request):
+    # if not request.user.is_authenticated:
+    #     return redirect('signin')  # Use your login URL name
 
     gold_price = make_post('GOLD_PRICE_ENDPOINT', {"timeFrame": "1D"})
 
@@ -21,9 +26,6 @@ def buy_now_view(request):
     print(gold_price, price)
     # Token is now available, proceed to product page
     return render(request, 'app_shop/product_page.html', {'price': price})
-
-def product_page_view(request):
-    return render(request, 'app_shop/product_page.html')
 
 def customer_detail(request):
     if not request.user.is_authenticated:
@@ -77,30 +79,39 @@ def refresh_balance(request):
 
     return redirect('balance', custRefNo=request.user.id)  # Redirect to the balance view with the user's ID
 
-def tradeEstimateView(request):
-    # if not request.user.is_authenticated:
-    #     return redirect('signin')
-
-    quote = make_post('ESTIMATE_ENDPOINT', {"currencyPair": "XAU/INR", "type": "BUY"})
-
-    if request.method == 'GET':
-        estimate = {
-                "totalAmount": "6105.73", 
-                "quantity": "1.0000", 
-                "quoteValidityTime": "480000", 
-                "taxType": "CGST/SGST", 
-                "tax1Amt": "88.92", 
-                "tax2Amt": "88.92", 
-                "tax1Perc": "1.50", 
-                "tax2Perc": "1.50", 
-                "preTaxAmount": "5927.89",
-                "taxAmount": "177.84", 
-                "quoteId": "MPLXpSCMI3gCjv8o1AInbtAia", 
-                "type": "BUY", 
-                "createdAt": "2023-04-04T07:58:30.039Z", 
-                "currencyPair": "XAU/INR" 
-            }
-        return render(request, 'app_shop/initialQuote.html', {'estimate': quote['data']})
+def tradeEstimateView(request, param1=None):
+    if param1:
+        first_char = param1[0]
+        tp = "BUY" if first_char == 'B' else "SELL"          
+        fourth_char = param1[3] if len(param1) > 3 else None
+        cp = "XAU/INR" if fourth_char == 'G' else "XAG/INR"
     else:
-        return render(request, 'app_shop/initialQuote.html')
+        cp = "XAU/INR"
+        tp = "BUY"
+        #need to code for sell, lease and loan in a better way, sending parameter in URL is not a good idea
 
+    if not request.user.is_authenticated:
+        quote = make_post('ESTIMATE_ENDPOINT', {"currencyPair": cp, "type": tp})
+        return render(request, 'app_shop/OneGram.html', {'estimate': quote['data']})
+    else:
+        try:
+            profile = Profile.objects.get(user=request.user)
+            transaction_ref = generate_transaction_ref(profile.customerRefNo, request.session.session_key)
+            quote_data = {
+                'customerRefNo': profile.customerRefNo,
+                'currencyPair': cp,
+                'transactionRefNo': transaction_ref
+                }
+            # print(quote_data)
+            response = make_post('TRADE_BUY_ENDPOINT', payload=quote_data)
+
+            # saveQuote(request, quote_data)  # Save current quote data to db in Quote model
+            quote_data = response["data"]
+            quote_data['customerRefNo'] = profile.customerRefNo
+            quote_data['transactionRefNo'] = transaction_ref
+            print("Response from Trade Buy API:", quote_data)
+
+            return render(request, 'app_shop/initialQuote.html', {'estimate': quote_data})
+        except Profile.DoesNotExist:
+            messages.error(request, "Please update your profile for missing information.")
+            return redirect('profile')

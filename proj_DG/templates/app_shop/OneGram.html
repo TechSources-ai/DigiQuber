@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row" style="align-items: center; justify-content: center;">
+    {% if estimate %}
+        {% if estimate.currencyPair == "XAU/INR" %}
+            <h5>Gold (XAU) to Indian Rupee (INR) for 1 Gram</h5>
+        {% elif estimate.currencyPair == "XAG/INR" %}
+            <h5>Silver (XAG) to Indian Rupee (INR) for 1 Gram</h5>
+        {% else %}
+            <h5>{{ estimate.currencyPair }} for 1 Gram</h5>
+    {% endif %}
+
+    <div class="onegm">
+        <label for="price">Unit Price (INR):</label>
+        <input type="number" id="price" value="{{ estimate.preTaxAmount }}" readonly>
+    </div>
+
+    <div class="onegm">
+        <label for="qty">Quantity (Gram):</label>
+        <input type="number" name="qty" id="qty" value="{{ estimate.quantity }}" readonly>
+    </div>
+
+    <div class="onegm">
+        <label for="pta">Pre-Tax Amount (INR):</label>
+        <input type="number" name="pta" id="pta" value="{{ estimate.preTaxAmount }}" readonly>
+    </div>
+
+    <div class="onegm">
+        <label for="cgst">CGST (%):</label>
+        <input type="number" id="cgst" value="{{ estimate.tax1Perc }}" readonly>
+    </div>
+
+    <div class="onegm">
+        <label for="sgst">SGST (%):</label>
+        <input type="number" id="sgst" value="{{ estimate.tax2Perc }}" readonly>
+    </div>
+
+    <div class="onegm">
+        <label for="taxAmount">Calculated Tax:</label>
+        <input type="text" id="taxAmount" readonly value="{{ estimate.taxAmount }}">
+    </div>
+
+    <div class="onegm">
+        <label for="totalAmount">Total Amount (with tax):</label>
+        <input type="text" id="totalAmount" readonly value="{{ estimate.totalAmount }}">
+    </div>
+    <div style="margin-top: 10px; text-align: center;"><p>Quote ID: {{ estimate.quoteId }}</p></div>
+    <div style="margin-top: 10px; text-align: center;"><p>Created At: {{ estimate.createdAt }}</p></div>
+    <div style="margin-top: 10px; text-align: center;"><p>Login or Signup to generate quote:</p></div>
+    {% else %}
+        <p>No estimate data available.</p>
+    {% endif %}
+</div>
+{% endblock %}

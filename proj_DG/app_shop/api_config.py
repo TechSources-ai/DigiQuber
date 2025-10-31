@@ -14,7 +14,8 @@ class ExternalAPI:
         'GOLD_PRICE_ENDPOINT': '/PRICE/XAU/INR',
         'SILVER_PRICE_ENDPOINT': '/PRICE/XAG/INR',
         'ESTIMATE_ENDPOINT': '/pvt/getNonExecutableQuote',
-        'TRADE_BUY_ENDPOINT': '/pvt/getNonExecutableQuote',
+        'TRADE_BUY_ENDPOINT': '/trade/getQuoteBuy',
+        'TRADE_VALIDATE_ENDPOINT_PG': '/trade/validateQuotePartnerPg',
         'TRADE_SELL_ENDPOINT': '/pvt/getNonExecutableQuote',
         'TRADE_TRANSFER_ENDPOINT': '/pvt/getNonExecutableQuote',
         }
