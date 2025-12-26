@@ -1,0 +1,110 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Checkout — Pay</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+  <style>
+    body { font-family: Arial; padding: 30px; }
+    .card { max-width: 600px; margin: auto; padding: 20px; box-shadow: 0 0 10px #ddd; border-radius: 10px; }
+    button { background:#111827; color:white; border:0; padding:12px 18px; border-radius:6px; cursor:pointer; }
+  </style>
+</head>
+
+<body>
+<div class="card">
+  <h2>Confirm & Pay</h2>
+  <p>Quote ID: {{ quote_id }}</p>
+  <h3>Amount: ₹{{ amount }}</h3>
+
+  <button id="payNow">Pay Now</button>
+</div>
+
+<script>
+// ------------------------------
+//  CSRF Helper
+// ------------------------------
+function getCookie(name) {
+  let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  return match ? match[2] : null;
+}
+
+document.getElementById("payNow").onclick = async function() {
+
+  const csrftoken = getCookie('csrftoken');
+  const amountPaise = {{ amount_in_paise }};
+  const quoteId = "{{ quote_id }}";
+
+  // ------------------------------
+  // 1) Create Razorpay Order
+  // ------------------------------
+  const form = new FormData();
+  form.append("amount", amountPaise);
+  form.append("quote_id", quoteId);
+
+  const r1 = await fetch("{% url 'create_order' %}", {
+    method: "POST",
+    headers: { "X-CSRFToken": csrftoken },
+    body: form
+  });
+
+  const data = await r1.json();
+  const orderId = data.id;
+
+  // ------------------------------
+  // 2) Setup Razorpay Checkout
+  // ------------------------------
+  const options = {
+    key: "{{ razorpay_key_id }}",
+    amount: amountPaise,
+    currency: "INR",
+    order_id: orderId,
+    redirect: false,
+
+    handler: async function (response) {
+
+      // ------------------------------
+      // 3) Verify payment on our server
+      // ------------------------------
+      const f = new FormData();
+      f.append("razorpay_payment_id", response.razorpay_payment_id);
+      f.append("razorpay_order_id", response.razorpay_order_id);
+      f.append("razorpay_signature", response.razorpay_signature);
+      f.append("quote_id", quoteId);
+
+      const verify = await fetch("{% url 'payment_success' %}", {
+        method: "POST",
+        headers: { "X-CSRFToken": csrftoken },
+        body: f
+      });
+
+      // ------------------------------
+      // IMPORTANT FIX (No about:blank)
+      // ------------------------------
+      if (verify.ok) {
+        const html = await verify.text(); // get success HTML from Django
+        document.write(html);             // directly render it
+      } else {
+        alert("Payment verification failed on server.");
+      }
+    },
+
+    theme: { color: "#111827" }
+  };
+
+  const rzp = new Razorpay(options);
+
+  rzp.on("payment.failed", function (resp) {
+    alert("Payment failed: " + resp.error.description);
+  });
+
+  rzp.open();
+};
+</script>
+
+</body>
+</html>

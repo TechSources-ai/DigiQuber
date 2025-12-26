@@ -1,0 +1,164 @@
+/* ================= GLOBAL HELPERS ================= */
+
+.section-dark {
+  background: #000;
+  color: #fff;
+  padding: 60px 0;
+}
+
+.text-gold {
+  color: #c59d43;
+}
+
+.icon-gold {
+  color: #f4c542;
+}
+
+.section-badge {
+  background: #c59d43;
+  color: #000;
+  padding: 6px 18px;
+  border-radius: 50px;
+}
+
+/* ================= HERO ================= */
+
+.hero-section {
+  background: linear-gradient(to right, #0a0a0a 40%, #1a1206 100%);
+  color: white;
+}
+
+.hero-badge {
+  background-color: #f4c542;
+  color: #000;
+  border-radius: 50px;
+}
+
+/* ================= PRICE CARDS ================= */
+
+.price-card {
+  background: #0f0f0f;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #000;
+}
+
+.gold-card {
+  border: 1px solid #f4c542;
+}
+
+.silver-card {
+  border: 1px solid #444;
+}
+
+.gold-card h2 {
+  color: #f6cc59;
+  font-weight: 900;
+}
+
+.silver-card h2 {
+  color: #e9e8e3;
+  font-weight: 900;
+}
+
+/* ================= HOW IT WORKS ================= */
+
+.step-card {
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.step-number {
+  background: #c59d43;
+  color: #000;
+  border-radius: 50%;
+  padding: 6px 12px;
+}
+
+/* ================= CHARTS ================= */
+
+.chart-card {
+  background: #0f0f0f;
+  border: 1px solid #222;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.chart-container {
+  margin-top: 20px;
+  height: 220px;
+  background: linear-gradient(to top, #1a1a1a, #000);
+  border-radius: 12px;
+}
+
+#goldChart,
+#silverChart {
+  height: 220px;
+}
+
+/* ================= FEATURES ================= */
+
+.feature-card {
+  background: #0f0f0f;
+  border: 1px solid #222;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.feature-card.featured {
+  border: 1px solid #f4c542;
+}
+
+/* ================= CTA ================= */
+
+.cta-card {
+  background: rgba(20, 15, 5, 0.7);
+  border: 1px solid #c59d43;
+  border-radius: 20px;
+  padding: 40px;
+}
+
+.btn-gold {
+  background: #f4c542;
+  color: #000;
+}
+
+.btn-outline-darkgold {
+  border: 1px solid #c59d43;
+  color: #c59d43;
+}
+
+/* ================= FOOTER ================= */
+
+.footer-dark {
+  background: #000;
+  color: #fff;
+}
+
+.logo-circle {
+  width: 45px;
+  height: 45px;
+  background: #f4c542;
+  color: #000;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-link {
+  color: #fff;
+  text-decoration: none;
+}
+
+.footer-link:hover {
+  color: #f4c542;
+}
+
+.footer-divider {
+  border-color: #333;
+  margin: 24px 0;
+}

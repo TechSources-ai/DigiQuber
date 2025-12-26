@@ -3,31 +3,63 @@ from .api_config import ExternalAPI
 from django.conf import settings
 import base64
 from requests.exceptions import RequestException
+import json
+
 
 sessionId = '123'
 
+# def make_post(endpoint, payload):
+#     url = f"{EXTERNAL_APIS['BASE_URL']}{EXTERNAL_APIS[endpoint]}"
+#     headers = {
+#         'Accept': 'application/json',
+#         'Cookie': f'sessionId={sessionId}',
+#         'Content-Type': 'application/json',
+#         }
+#     try:
+#         response = requests.post(url, json=payload, headers=headers)
+#         # Handle response
+#         if response.status_code == 200:
+#             data = response.json()  # Or response.text, depending on API
+#             print("Status Code:", response.status_code)
+#             print("Response Body:", response.text)
+#             return response.text
+#         else:
+#             print(f"Error: {response.status_code} - {response.text}")
+#             return None
+
+#     except requests.RequestException as e:
+#         print(f"Request failed: {e}")
+#         return None
+
 def make_post(endpoint, payload):
-    url = f"{EXTERNAL_APIS['BASE_URL']}{EXTERNAL_APIS[endpoint]}"
+    #url = f"{EXTERNAL_APIS['BASE_URL']}{EXTERNAL_APIS[endpoint]}"
+    url = f"{ExternalAPI.EXTERNAL_APIS['BASE_URL']}{ExternalAPI.EXTERNAL_APIS[endpoint]}"
+
     headers = {
         'Accept': 'application/json',
         'Cookie': f'sessionId={sessionId}',
         'Content-Type': 'application/json',
-        }
+    }
+
+    print("\n🔵 SENDING TO MMTC URL:", url)
+    print("🟢 FINAL PAYLOAD SENT:", json.dumps(payload, indent=4))
+
     try:
         response = requests.post(url, json=payload, headers=headers)
-        # Handle response
-        if response.status_code == 200:
-            data = response.json()  # Or response.text, depending on API
-            print("Status Code:", response.status_code)
-            print("Response Body:", response.text)
-            return response.text
-        else:
-            print(f"Error: {response.status_code} - {response.text}")
-            return None
+
+        print("🔵 STATUS:", response.status_code)
+        print("🔵 RAW RESPONSE:", response.text)
+
+        # Always try parsing JSON
+        try:
+            return response.json()
+        except:
+            return {"status": response.status_code, "raw": response.text}
 
     except requests.RequestException as e:
-        print(f"Request failed: {e}")
+        print(f"❌ Request failed: {e}")
         return None
+
 
 def auth_api():
 

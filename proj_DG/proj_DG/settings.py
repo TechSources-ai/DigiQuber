@@ -15,10 +15,15 @@ import environ
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+# BASE_DIR = Path(__file__).resolve().parent.parent
+
+# # Quick-start development settings - unsuitable for production
+# # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
+# env = environ.Env()
+# environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 env = environ.Env()
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
@@ -53,6 +58,8 @@ INSTALLED_APPS = [
     'app_user',
     'app_shop',
     'app_trade',
+    'app_sell',
+    'app_pay',
 ]
 
 MIDDLEWARE = [
@@ -147,3 +154,4 @@ DEFAULT_FROM_EMAIL = 'webmaster@localhost'
 LOGIN_URL = 'signin'
 LOGIN_REDIRECT_URL = '/post-login-handler/'  # Redirect here after login
 LOGOUT_REDIRECT_URL = 'home'  # Redirect here after logout
+PROVIDER_SESSION_ID = env('provider_session_id')

@@ -1,3 +1,5 @@
+
+
 {% extends "base.html" %}
 {% block content %}
 <div class=" row mt-5">
@@ -29,14 +31,37 @@
             <tr><td>Total Amount</td><td>{{ estimate.totalAmount }}</td></tr>
         </table>
     </div>
+
     <div style="margin-top: 10px; text-align: center;"><p>Quote ID: {{ estimate.quoteId }}</p></div>
     <div style="margin-top: 10px; text-align: center;"><p>Transaction Ref No: {{ estimate.transactionRefNo }}</p></div>
     <div style="margin-top: 10px; text-align: center;"><p>Customer Ref No: {{ estimate.customerRefNo }}</p></div>
     <div style="margin-top: 10px; text-align: center;"><p>Created At: {{ estimate.createdAt }}</p></div>
-    
+
+    <!-- VALIDATE FORM -->
+    <form method="POST" action="/app_trade/validate/" style="margin-top:20px; text-align:center;">
+        {% csrf_token %}
+        <input type="hidden" name="cid" value="{{ estimate.customerRefNo }}">
+        <input type="hidden" name="pta" value="{{ estimate.preTaxAmount }}">
+        <input type="hidden" name="qty" value="{{ estimate.quantity }}">
+        <input type="hidden" name="qid" value="{{ estimate.quoteId }}">
+        <input type="hidden" name="cgstAmt" value="{{ estimate.tax1Amt }}">
+        <input type="hidden" name="sgstAmt" value="{{ estimate.tax2Amt }}">
+        <input type="hidden" name="createdAt" value="{{ estimate.createdAt }}">
+        <input type="hidden" name="tid" value="{{ estimate.transactionRefNo }}">
+        <input type="hidden" name="totalAmount" value="{{ estimate.totalAmount }}">
+        <input type="hidden" name="currency-pair" value="{{ estimate.currencyPair }}">
+        <input type="hidden" name="taxAmount" value="{{ estimate.taxAmount }}">
+        <input type="hidden" name="tax1Perc" value="{{ estimate.tax1Perc }}">
+        <input type="hidden" name="tax2Perc" value="{{ estimate.tax2Perc }}">
+        <input type="hidden" name="taxType" value="{{ estimate.taxType }}">
+        <input type="hidden" name="unitPriceAmt" value="{{ estimate.preTaxAmount }}">
+        <button type="submit" class="btn btn-primary">Validate Quote</button>
+    </form>
+
     {% else %}
         <p>No estimate data available.</p>
     {% endif %}
+
     <a href="#" class="card-link">Edit Quote</a>
 </div>
 {% endblock %}

@@ -68,16 +68,103 @@ def confirm_email_view(request):
         return redirect('create_profile')
     return redirect('dashboard')
 
+# def create_profile_view(request):
+#     profile = request.user.profile
+#     if request.method == 'POST':
+#         form = ProfileForm(request.POST, instance=profile)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('dashboard')
+#     else:
+#         form = ProfileForm(instance=profile)
+#     return render(request, 'app_customer/create_profile.html', {'form': form})
+
+
 def create_profile_view(request):
-    profile = request.user.profile
-    if request.method == 'POST':
-        form = ProfileForm(request.POST, instance=profile)
+    user = request.user
+    profile = user.profile
+
+    if request.method == "POST":
+        form = ProfileForm(request.POST, instance=profile, user=user)
+
         if form.is_valid():
-            form.save()
-            return redirect('dashboard')
+            # ---------------------------------
+            # 1️⃣ Save profile locally
+            # ---------------------------------
+            profile = form.save(commit=False)
+            profile.user = user
+
+            # ---------------------------------
+            # 2️⃣ Ensure addresses already exist
+            # (this view assumes edit_profile_view saved them)
+            # ---------------------------------
+            if not profile.billingAddress or not profile.deliveryAddress:
+                return redirect("edit_profile")  # force address completion
+
+            # ---------------------------------
+            # 3️⃣ Generate partner-side address ID
+            # ---------------------------------
+            if not profile.billingAddressId:
+                profile.billingAddressId = f"{profile.customerRefNo}_BILL"
+
+            profile.save()
+
+            # ---------------------------------
+            # 4️⃣ Sync with MMTC (ONLY ONCE)
+            # ---------------------------------
+            if not profile.dgcustomerRefNo:
+                session_id = request.session.get("mmtc_session_id")
+
+                # If MMTC login not enabled yet, skip sync safely
+                if not session_id:
+                    return redirect("dashboard")
+
+                payload = {
+                    "mobileNumber": user.phone,
+                    "customerRefNo": profile.customerRefNo,
+                    "fullName": profile.name,
+                    "kycStatus": profile.kycStatus,  # "Y" or "I"
+                    "partner_id": settings.MMTC_PARTNER_ID,
+                    "emailAddress": user.email,
+                    "dob": profile.dob.strftime("%Y-%m-%d") if profile.dob else None,
+                    "billingAddress": profile.billingAddress,
+                    "deliveryAddress": profile.deliveryAddress,
+                }
+
+                headers = {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Cookie": f"sessionId={session_id}",
+                }
+
+                resp = requests.post(
+                    settings.MMTC_BASE_URL + "/customer/createProfile",
+                    json=payload,
+                    headers=headers,
+                    timeout=15,
+                )
+
+                if resp.status_code == 200:
+                    data = resp.json()
+                    if "dgCustomerRefNo" in data:
+                        profile.dgcustomerRefNo = data["dgCustomerRefNo"]
+                        profile.save(update_fields=["dgcustomerRefNo"])
+                else:
+                    print("MMTC CREATE PROFILE ERROR:", resp.text)
+
+            return redirect("dashboard")
+
     else:
-        form = ProfileForm(instance=profile)
-    return render(request, 'app_customer/create_profile.html', {'form': form})
+        form = ProfileForm(instance=profile, user=user)
+
+    return render(
+        request,
+        "app_customer/create_profile.html",
+        {
+            "form": form,
+        },
+    )
+
 
 def dashboard_view(request):
     return render(request, 'app_customer/dashboard.html')

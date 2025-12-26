@@ -1,73 +1,119 @@
 {% extends "base.html" %}
 {% block content %}
-<body>
-    <h1>Create Customer</h1>
-    <table border="1">
-        <thead>
+
+<div class="container my-5">
+
+  <!-- PAGE TITLE -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold mb-0">Customer Management</h2>
+
+    <form method="post" action="{% url 'update' %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-outline-primary fw-semibold">
+        Update Customers
+      </button>
+    </form>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-body p-0">
+
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+
+          <thead class="table-light">
             <tr>
-                <th>Name</th>
-                <th>Reference Number</th>
-                <th>Create Profile</th>
-                <th>Get Profile</th>
-                <th>Activate Customer</th>
-                <th>Deactivate Customer</th>
-                <th>Validate KYC</th>
-                <th>Invalidate KYC</th>
+              <th>Name</th>
+              <th>Customer Ref</th>
+              <th class="text-center">Profile</th>
+              <th class="text-center">Get</th>
+              <th class="text-center">Activate</th>
+              <th class="text-center">Deactivate</th>
+              <th class="text-center">KYC ✔</th>
+              <th class="text-center">KYC ✖</th>
             </tr>
-        </thead>
-        <tbody>
+          </thead>
+
+          <tbody>
             {% for customer in customers %}
             <tr>
-                <td>{{ customer.name }}</td>
-                <td>{{ customer.customerRefNo }}</td>
-                <td>
-                    <form method="post" action="{% url 'create_profile' customer.customerRefNo %}">
-                        {% csrf_token %}
-                        <button type="submit">Create</button>
-                    </form>
-                </td>
-                <td>
-                    <form method="post" action="{% url 'fetch_profile' customer.customerRefNo %}">
-                        {% csrf_token %}
-                        <button type="submit">Get</button>
-                    </form>
-                </td>
-                <td>
-                    <form method="post" action="{% url 'activateCustomer' customer.customerRefNo %}">
-                        {% csrf_token %}
-                        <button type="submit">Activate</button>
-                    </form>
-                </td>
-                <td>
-                    <form method="post" action="{% url 'deActivateCustomer' customer.customerRefNo %}">
-                        {% csrf_token %}
-                        <button type="submit">Deactivate</button>
-                    </form>
-                </td>
-                <td>
-                    <form method="post" action="{% url 'validateKYC' customer.customerRefNo %}">
-                        {% csrf_token %}
-                        <button type="submit">Validate</button>
-                    </form>
-                </td>
-                <td>
-                    <form method="post" action="{% url 'inValidateKYC' customer.customerRefNo %}">
-                        {% csrf_token %}
-                        <button type="submit">Invalidate</button>
-                    </form>
-                </td>
+              <td class="fw-semibold">{{ customer.name }}</td>
+              <td>
+                <span class="badge bg-dark">
+                  {{ customer.customerRefNo }}
+                </span>
+              </td>
+
+              <td class="text-center">
+                <form method="post" action="{% url 'create_profile' customer.customerRefNo %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-outline-secondary">
+                    Create
+                  </button>
+                </form>
+              </td>
+
+              <td class="text-center">
+                <form method="post" action="{% url 'fetch_profile' customer.customerRefNo %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-outline-info">
+                    Get
+                  </button>
+                </form>
+              </td>
+
+              <td class="text-center">
+                <form method="post" action="{% url 'activateCustomer' customer.customerRefNo %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-outline-success">
+                    Activate
+                  </button>
+                </form>
+              </td>
+
+              <td class="text-center">
+                <form method="post" action="{% url 'deActivateCustomer' customer.customerRefNo %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-outline-warning">
+                    Deactivate
+                  </button>
+                </form>
+              </td>
+
+              <td class="text-center">
+                <form method="post" action="{% url 'validateKYC' customer.customerRefNo %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-outline-success">
+                    Validate
+                  </button>
+                </form>
+              </td>
+
+              <td class="text-center">
+                <form method="post" action="{% url 'inValidateKYC' customer.customerRefNo %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-outline-danger">
+                    Invalidate
+                  </button>
+                </form>
+              </td>
             </tr>
+
             {% empty %}
             <tr>
-                <td colspan="3">No users found.</td>
+              <td colspan="8" class="text-center text-muted py-4">
+                No customers found.
+              </td>
             </tr>
             {% endfor %}
-        </tbody>
-    </table>
-    <form method="post" action="{% url 'update' %}">
-        {% csrf_token %}
-        <button type="submit">Update</button>
-    </form>
-</body>
-{% endblock %}
+          </tbody>
 
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

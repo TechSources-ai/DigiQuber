@@ -1,0 +1,27 @@
+{% load static %}
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Payment Successful</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link href="{% static 'css/base.css' %}" rel="stylesheet">
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; padding: 24px; }
+    .card { max-width: 720px; margin: 24px auto; padding: 20px; border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,.08); text-align:center; }
+    .success { color: #0f5132; background: #d1e7dd; padding: 12px; border-radius:8px; display:inline-block; margin-bottom:16px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="success"><strong>Payment received</strong></div>
+    <h2>Thank you!</h2>
+    <p>Your payment has been verified and recorded.</p>
+    {% if payment_record %}
+      <p class="muted">Payment ID: <strong>{{ payment_record.razorpay_payment_id }}</strong></p>
+      <p class="muted">Amount: <strong>₹{{ payment_record.amount }}</strong></p>
+    {% endif %}
+    <p><a href="/">Return to home</a></p>
+  </div>
+</body>
+</html>

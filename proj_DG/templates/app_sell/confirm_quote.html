@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <div class="card shadow-sm">
+                <div class="card-header text-center bg-dark text-white">
+                    <h4 class="mb-0">Confirm Sell</h4>
+                </div>
+
+                <div class="card-body">
+
+                    <!-- Quote Details -->
+                    <div class="mb-3">
+                        <strong>Metal:</strong>
+                        <span class="float-end">{{ quote.metal }}</span>
+                    </div>
+
+                    <div class="mb-3">
+                        <strong>Quantity:</strong>
+                        <span class="float-end">{{ quote.requested_qty }} g</span>
+                    </div>
+
+                    <div class="mb-3">
+                        <strong>Rate per gram:</strong>
+                        <span class="float-end">₹{{ quote.rate_per_gram }}</span>
+                    </div>
+
+                    <hr>
+
+                    <div class="mb-3">
+                        <strong>Total Amount:</strong>
+                        <span class="float-end fw-bold text-success">
+                            ₹{{ final_amount }}
+                        </span>
+                    </div>
+
+                    <div class="mb-3 text-muted small">
+                        Quote valid till:
+                        <strong>{{ expires_at|date:"d M Y, H:i:s" }}</strong>
+                    </div>
+
+                    <!-- Confirm Form -->
+                    <form method="post" action="{% url 'sell_confirm' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="quote_id" value="{{ quote.quote_id }}">
+
+                        <button type="submit" class="btn btn-danger w-100">
+                            Confirm Sell
+                        </button>
+                    </form>
+
+                    <!-- Cancel -->
+                    <div class="text-center mt-3">
+                        <a href="{% url 'sell_page' %}" class="text-decoration-none">
+                            Cancel
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

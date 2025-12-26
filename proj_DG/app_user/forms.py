@@ -33,9 +33,28 @@ class ProfileForm(forms.ModelForm):
             'phone'
         ]
 
+    # def __init__(self, *args, **kwargs):
+    #     user = kwargs.pop('user', None)
+    #     super().__init__(*args, **kwargs)
+    #     if user:
+    #         self.fields['email'].initial = user.email
+    #         self.fields['phone'].initial = user.phone
+
+
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
+
         if user:
+            # always show email
             self.fields['email'].initial = user.email
-            self.fields['phone'].initial = user.phone
+
+            if user.phone:
+                # 🔒 phone already verified → lock it
+                self.fields['phone'].initial = user.phone
+                self.fields['phone'].disabled = True
+                self.fields['phone'].required = False
+            else:
+                # 🔓 email signup → phone required
+                self.fields['phone'].disabled = False
+                self.fields['phone'].required = True

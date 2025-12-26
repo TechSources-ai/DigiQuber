@@ -1,18 +1,148 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="mt-5 text-center">
-  <h2>Product Page</h2>
-  <p>Here is your product information.</p>
-  <div class="card" style="width: 18rem;">
-    <div class="card-body">
-      <h5 class="card-title">Gold</h5>
-      <h6 class="card-subtitle mb-2 text-muted">Today's Price</h6>
-      <p class="card-text"><strong>{{ price }}</strong></p>
-      <a href="{% url 'inquiry' 'BuyGold' %}" class="card-link">Buy</a>
-      <a href="{% url 'inquiry' 'SellGold' %}" class="card-link">Sell</a>
-      <a href="{% url 'inquiry' 'LoanGold' %}" class="card-link">Loan</a>
-      <a href="{% url 'inquiry' 'LeaseGold' %}" class="card-link">Lease</a>
+
+<div class="container py-5">
+
+    <!-- HEADER -->
+    <div class="text-center mb-5">
+        <h1 class="fw-bold">Buy Digital Gold & Silver</h1>
+        <p class="text-muted">Live market-linked pricing. Safe. Instant. Secure.</p>
     </div>
-  </div>
+
+    <!-- LIVE PRICE CARDS -->
+    <div class="row g-4 mb-4">
+
+        <!-- GOLD -->
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body text-center">
+
+                    <h4 class="fw-bold text-warning mb-2">Gold (24K)</h4>
+
+                    <h2 class="fw-bold" id="goldPrice">
+                        ₹{{ gold_price }}
+                    </h2>
+
+                    <p class="text-muted small">Live price per gram</p>
+
+                    <button class="btn btn-dark w-100 mt-3"
+                             onclick="window.location.href='{% url 'inquiry' 'BuyGold' %}'">
+                        Buy Gold
+                    </button>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- SILVER -->
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body text-center">
+
+                    <h4 class="fw-bold text-secondary mb-2">Silver (999)</h4>
+
+                    <h2 class="fw-bold" id="silverPrice">
+                        ₹{{ silver_price }}
+                    </h2>
+
+                    <p class="text-muted small">Live price per gram</p>
+
+                    <button class="btn btn-primary w-100 mt-3"
+                            onclick="window.location.href='{% url 'inquiry' 'buy_silver' %}'">
+                        Buy Silver
+                    </button>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- INFO FEATURES -->
+    <div class="row g-4 mt-4">
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100 text-center p-4">
+                <i class="bi bi-shield-check display-5 text-success"></i>
+                <h5 class="fw-bold mt-3">100% Secure</h5>
+                <p class="text-muted small">Your gold is held in insured vaults.</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100 text-center p-4">
+                <i class="bi bi-cash-coin display-5 text-warning"></i>
+                <h5 class="fw-bold mt-3">Instant Liquidity</h5>
+                <p class="text-muted small">Buy or sell instantly at market prices.</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100 text-center p-4">
+                <i class="bi bi-graph-up-arrow display-5 text-primary"></i>
+                <h5 class="fw-bold mt-3">Best Market Rates</h5>
+                <p class="text-muted small">Live rates sourced directly from LBMA.</p>
+            </div>
+        </div>
+
+    </div>
+
 </div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const qtyEl = document.getElementById("qty");
+    const ptaEl = document.getElementById("pta");
+    const cgstEl = document.getElementById("cgstAmt");
+    const sgstEl = document.getElementById("sgstAmt");
+    const taxEl = document.getElementById("taxAmount");
+    const totalEl = document.getElementById("totalAmount");
+
+    const meta = document.getElementById("quote-data");
+    const unitPrice = Number(meta.dataset.unitPrice || 0);
+    const cgstPerc = Number(meta.dataset.cgst || 0);
+    const sgstPerc = Number(meta.dataset.sgst || 0);
+
+    function forceNumber(x) {
+        return isNaN(parseFloat(x)) ? 0 : parseFloat(x);
+    }
+
+    function calcTotals() {
+        let qty = forceNumber(qtyEl.value);
+        let pta = forceNumber(ptaEl.value);
+
+        // Sync logic (always keep pta = qty * unit price)
+        if (document.activeElement === qtyEl) {
+            pta = qty * unitPrice;
+            ptaEl.value = pta.toFixed(2);
+        } else if (document.activeElement === ptaEl) {
+            qty = pta / unitPrice;
+            qtyEl.value = qty.toFixed(2);
+        }
+
+        const cgst = pta * (cgstPerc / 100);
+        const sgst = pta * (sgstPerc / 100);
+        const totalTax = cgst + sgst;
+        const totalAmt = pta + totalTax;
+
+        cgstEl.value = cgst.toFixed(2);
+        sgstEl.value = sgst.toFixed(2);
+        taxEl.value = totalTax.toFixed(2);
+        totalEl.value = totalAmt.toFixed(2);
+    }
+
+    // Update on ANY input
+    ["input", "change", "keyup", "wheel"].forEach(evt => {
+        qtyEl.addEventListener(evt, calcTotals);
+        ptaEl.addEventListener(evt, calcTotals);
+    });
+
+    // Initial calculation
+    calcTotals();
+
+});
+</script>
+
 {% endblock %}

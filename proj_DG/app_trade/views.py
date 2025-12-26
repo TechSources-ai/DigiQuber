@@ -12,7 +12,10 @@ from django.utils import timezone
 from django.contrib import messages
 from django.conf import settings
 from django.http import JsonResponse
-
+from decimal import Decimal, InvalidOperation
+from datetime import datetime
+from app_shop.utils import make_post
+import uuid
 
 def post_login_handler(request):
     next_url = request.session.get('next', '/')
@@ -108,39 +111,157 @@ def generate_quote(request):
     return render(request, 'app_shop/validateQuote.html', {'estimate': response['data']})
 
 def validate_quote(request):
+    from decimal import Decimal, InvalidOperation
+
     ep = 'TRADE_VALIDATE_ENDPOINT_PG'
+    print("🔥 POST DATA =", request.POST)
+
     if not request.user.is_authenticated:
-        messages.info(request, "Please sign in to proceed with the quote validation.")
-        return redirect('signin')  # Or your login/signup route
-    elif request.method == 'POST':
-        validate_data = {
-            "customerRefNo": request.POST.get('cid'), 
-            "calculationType": "Q", 
-            "preTaxAmount": request.POST.get('pta'),
-            "quantity": request.POST.get('qty'),
-            "quoteId": request.POST.get('qid'), 
-            "tax1Amt": request.POST.get('cgstAmt'),
-            "tax2Amt": request.POST.get('sgstAmt'),
-            "transactionDate": request.POST.get('createdAt'), 
-            "transactionOrderID": request.POST.get('tid'), 
-            "totalAmount": request.POST.get('totalAmount')
-            }
-        print("Quote Data Received for Validation:**************************************")
-        print(validate_data)
-        print(validate_data['totalAmount'])
-        response = make_post(endpoint=ep, payload=validate_data)
-        print("Response from Trade Validate API:", response)
-        if response.get("status") == 200:
-            saveQuote(request, validate_data)  # Save current quote data to db in Quote model
-            orderId = create_razorpay_order(amount=validate_data['totalAmount']*100)
-            return redirect('payment_page')
-        else:
-            messages.error(request, "Quote validation failed. Please try again.")
-            return redirect('chk_price')  # or some other appropriate page
-    # else:
-    #     return redirect('chk_price')  # or some other appropriate page
+        messages.error(request, "Please sign in.")
+        return redirect('signin')
 
+    if request.method != 'POST':
+        messages.error(request, "Invalid request.")
+        return redirect('chk_price')
 
+    currency_pair = request.POST.get("currency-pair")
+    if not currency_pair:
+        messages.error(request, "Missing currency pair.")
+        return redirect('chk_price')
 
+    # raw values
+    pta_raw = request.POST.get('pta')
+    cgst_raw = request.POST.get('cgstAmt')
+    sgst_raw = request.POST.get('sgstAmt')
+    tax_amount_raw = request.POST.get('taxAmount')
+    qty_raw = request.POST.get('qty')
 
+    # compute unit price correctly (per-unit)
+    try:
+        pta_dec = Decimal(str(pta_raw))
+        qty_dec = Decimal(str(qty_raw))
+        unit_price_raw = (pta_dec / qty_dec).quantize(Decimal('0.01'))
+    except Exception:
+        messages.error(request, "Invalid numeric values for price/quantity.")
+        return redirect('chk_price')
 
+    def fmt(n):
+        try:
+            if n is None:
+                return None
+            d = Decimal(str(n))
+            return format(d.quantize(Decimal('0.01')), 'f')
+        except:
+            return None
+
+    def safe_div_pct(numer, denom):
+        try:
+            if numer is None or denom is None:
+                return None
+            n = Decimal(str(numer))
+            d = Decimal(str(denom))
+            if d == 0:
+                return None
+            return format((n / d * Decimal('100')).quantize(Decimal('0.01')), 'f')
+        except:
+            return None
+
+    # GST percentage (normalize)
+    tax1_perc = request.POST.get('tax1Perc') or safe_div_pct(cgst_raw, pta_raw)
+    tax2_perc = request.POST.get('tax2Perc') or safe_div_pct(sgst_raw, pta_raw)
+    if tax1_perc is not None:
+        tax1_perc = str(Decimal(str(tax1_perc)).normalize())
+    if tax2_perc is not None:
+        tax2_perc = str(Decimal(str(tax2_perc)).normalize())
+
+    tax_type = request.POST.get('taxType') or 'GST'
+
+    # --- USE provider quote timestamp stored earlier ---
+    transaction_date = request.session.get('quote_timestamp')
+    # fallback for debugging only (not reliable for silver)
+    if not transaction_date:
+        transaction_date = request.POST.get('createdAt') or request.POST.get('transactionDate')
+
+    # transaction refs
+    transaction_refno = request.POST.get('tid') or request.POST.get('transactionRefNo') or request.POST.get('transactionOrderID')
+
+    # clean quantity ("1.0000" → "1")
+    try:
+        #qty_clean = str(Decimal(qty_raw).normalize())
+        qty_clean = format(Decimal(qty_raw), "f")
+
+    except Exception:
+        messages.error(request, "Invalid quantity.")
+        return redirect('chk_price')
+    print("🔥DEBUG QTY CLEAN =", qty_clean)
+
+    # correct metal + product codes
+    if currency_pair == "XAG/INR":
+        metal_type = "SILVER"
+        product_code = "XAG"
+    else:
+        metal_type = "GOLD"
+        product_code = "XAU"
+
+    # payload
+    validate_data = {
+        "customerRefNo": request.POST.get('cid'),
+        "calculationType": "Q",
+        "preTaxAmount": fmt(pta_raw),
+        "quantity": qty_clean,
+        "quoteId": request.POST.get('qid'),
+
+        "tax1Amt": fmt(cgst_raw),
+        "tax2Amt": fmt(sgst_raw),
+        "taxAmount": fmt(tax_amount_raw),
+        "tax1Perc": tax1_perc,
+        "tax2Perc": tax2_perc,
+        "taxType": tax_type,
+
+        "unitPriceAmt": fmt(unit_price_raw),
+        "unitPrice": fmt(unit_price_raw),
+
+        "transactionDate": transaction_date,
+        "createdAt": transaction_date,
+        "transactionOrderID": transaction_refno,
+        #"transactionOrderID": str(uuid.uuid4()),
+
+        "transactionRefNo": transaction_refno,
+        #"transactionRefNo": str(uuid.uuid4()),
+
+        "productCode": product_code,
+        "assetCode": product_code,
+        "metalCode": product_code,
+        "instrumentCode": product_code,
+        "metalType": metal_type,
+
+        "totalAmount": fmt(request.POST.get('totalAmount')),
+        "currencyPair": currency_pair,
+        "transactionType": request.POST.get('type') or "BUY",
+        "type": request.POST.get('type') or "BUY",
+    }
+
+    # remove None
+    validate_data = {k: v for k, v in validate_data.items() if v is not None}
+
+    print("\n🔥 VALIDATE QUOTE PAYLOAD =", validate_data)
+    print("=====================================\n")
+
+    response = make_post(endpoint=ep, payload=validate_data)
+    print("Validate Response:", response)
+
+    if response.get("status") == 200:
+        saveQuote(request, validate_data)
+        try:
+            amt = Decimal(str(validate_data.get("totalAmount")))
+            request.session['payment_amount'] = int((amt * Decimal('100')).quantize(Decimal('1')))
+        except: 
+            messages.error(request, "Invalid total amount for payment.")
+            return redirect('chk_price')
+
+        request.session['payment_quote_id'] = validate_data.get('quoteId')
+        request.session['payment_customerRefNo'] = validate_data.get('customerRefNo')
+        return redirect('/payments/payment/')
+
+    messages.error(request, "Quote validation failed. Try again.")
+    return redirect('chk_price')

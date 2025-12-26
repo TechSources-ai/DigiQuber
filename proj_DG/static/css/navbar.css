@@ -1,0 +1,36 @@
+/* FIX NAVBAR — FORCE BLACK BACKGROUND & WHITE TEXT */
+.navbar {
+    background-color: #000 !important;
+}
+
+.navbar .nav-link,
+.navbar .navbar-brand,
+.navbar .dropdown-toggle,
+.navbar a {
+    color: #fff !important;
+}
+
+/* Highlight active/link hover */
+.navbar .nav-link:hover {
+    color: #ffc107 !important;
+}
+
+/* Dropdown background fix */
+.navbar .dropdown-menu {
+    background-color: #111 !important;
+}
+
+.navbar .dropdown-item {
+    color: #fff !important;
+}
+
+.navbar .dropdown-item:hover {
+    background-color: #222 !important;
+}
+/* Remove unwanted white background from navbar container */
+.navbar .container {
+    background: transparent !important;
+    max-width: 100% !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+}

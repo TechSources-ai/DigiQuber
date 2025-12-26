@@ -1,99 +1,108 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="form-container">
-    {% comment %} <h2>Customer Details</h2>
 
-    <!-- Customer Information -->
-    <div class="form-section">
-        <label for="customerName">Customer Name:</label>
-        <input type="text" id="customerName" value="{{ balances.customerName }}" readonly>
+<div class="container my-5">
+
+    <h2 class="mb-4">Your Balance</h2>
+
+    <!-- =============================== -->
+    <!-- ACTUAL VAULT HOLDINGS           -->
+    <!-- =============================== -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header fw-semibold">
+            Your Holdings (Actual Vault Balance)
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped mb-0 text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Metal</th>
+                            <th>Total Quantity (g)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Gold</td>
+                            <td>{{ gold_balance }}</td>
+                        </tr>
+                        <tr>
+                            <td>Silver</td>
+                            <td>{{ silver_balance }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-    
-    <div class="form-section">
-        <label for="kycStatus">KYC Status:</label>
-        <input type="text" id="kycStatus" value="{{ balances.kyc_status }}" readonly>
-    </div> {% endcomment %}
 
-    <!-- Balances Table -->
-    <div class="form-section">
-        <a href="{% url 'refresh_balance' %}"><h3>Refresh Balance</h3></a>
-        
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>RefNo</th>
-                    <th>KYC Status</th>
-                    <th>Currency Pair</th>
-                    <th>Balance Quantity</th>
-                    <th>Blocked Quantity</th>
-                    <th>Balance As Of Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for balance in balances %}
-                    <tr>
-                        <td>{{ balance.customer_name }}</td>
-                        <td>{{ balance.custRefNo }}</td>
-                        <td>{{ balance.kyc_status }}</td>
-                        <td>{{ balance.currency_pair }}</td>
-                        <td>{{ balance.bal_quantity }}</td>
-                        <td>{{ balance.blocked_quantity }}</td>
-                        <td>{{ balance.date_created }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+
+    <!-- =============================== -->
+    <!-- TRANSACTION HISTORY             -->
+    <!-- =============================== -->
+    <div class="card shadow-sm">
+        <div class="card-header fw-semibold">
+            Transaction History (Buy & Sell)
+        </div>
+
+        <div class="card-body p-0">
+            {% if transactions %}
+            <div class="table-responsive">
+                <table class="table table-bordered mb-0 text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Type</th>
+                            <th>Metal</th>
+                            <th>Quantity (g)</th>
+                            <th>Total (₹)</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+
+                    <!-- Latest 3 -->
+                    <tbody>
+                        {% for tx in transactions|slice:":3" %}
+                        <tr class="{% if tx.type == 'SELL' %}table-danger{% else %}table-success{% endif %}">
+                            <td class="fw-semibold">{{ tx.type }}</td>
+                            <td>{{ tx.metal }}</td>
+                            <td>{{ tx.quantity }}</td>
+                            <td>₹{{ tx.total }}</td>
+                            <td>{{ tx.date|date:"d M Y, H:i" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                    <!-- Remaining (Collapsed) -->
+                    <tbody class="collapse" id="moreTransactions">
+                        {% for tx in transactions|slice:"3:" %}
+                        <tr class="{% if tx.type == 'SELL' %}table-danger{% else %}table-success{% endif %}">
+                            <td class="fw-semibold">{{ tx.type }}</td>
+                            <td>{{ tx.metal }}</td>
+                            <td>{{ tx.quantity }}</td>
+                            <td>₹{{ tx.total }}</td>
+                            <td>{{ tx.date|date:"d M Y, H:i" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% if transactions|length > 3 %}
+            <div class="text-center my-3">
+                <button class="btn btn-outline-secondary btn-sm"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#moreTransactions">
+                    View full history
+                </button>
+            </div>
+            {% endif %}
+
+            {% else %}
+            <p class="p-3 text-muted">No transactions found.</p>
+            {% endif %}
+        </div>
     </div>
 
 </div>
-{% endblock %}
-{% comment %} </body>
-</html> {% endcomment %}
 
-{% comment %} <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Details</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        .form-container {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        .form-container h2 {
-            text-align: center;
-        }
-        .form-section {
-            margin-bottom: 20px;
-        }
-        .form-section label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        .form-section input {
-            width: 100%;
-            padding: 8px;
-            margin: 5px 0;
-            box-sizing: border-box;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        table, th, td {
-            border: 1px solid #ccc;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
-    </style>
-</head>
-<body> {% endcomment %}
+{% endblock %}

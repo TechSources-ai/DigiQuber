@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Sell Gold / Silver</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" action="{% url 'sell_quote' %}">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label">Select Metal</label>
+            <select name="metal" class="form-control" required>
+                <option value="">-- Select --</option>
+                <option value="GOLD">Gold</option>
+                <option value="SILVER">Silver</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Quantity (grams)</label>
+            <input
+                type="number"
+                name="quantity"
+                step="0.0001"
+                min="0.0001"
+                class="form-control"
+                required
+            >
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Get Quote
+        </button>
+    </form>
+
+    <hr>
+
+    <h4>Your Balances</h4>
+    <ul>
+        {% for b in balances %}
+            <li>
+                {{ b.currency_pair }} :
+                {{ b.bal_quantity }} g
+            </li>
+        {% empty %}
+            <li>No balance available</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

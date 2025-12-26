@@ -1,59 +1,204 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="row mt-5">
-    <h2>Initial Quote for 1 Gram</h2>
-    <p>Enter amount or quantity as per your requirement:</p>
-    
-    {% if estimate %}
-    <form method="POST" id="quote-form" action="{% url 'confirm_quote' %}">
-    {% csrf_token %}
-    <div class="col-md-6">
-        <input type="hidden" name="currency-pair" id="currency-pair" value="{{ estimate.currencyPair }}">
-        {% if estimate.currencyPair == "XAU/INR" %}
-            <h5>Gold (XAU) to Indian Rupee (INR)</h5>
-        {% elif estimate.currencyPair == "XAG/INR" %}
-            <h5>Silver (XAG) to Indian Rupee (INR)</h5>
-        {% else %}
-            <h5>{{ estimate.currencyPair }}</h5>
-        {% endif %}
 
-        <div class="col-md-12 form-group">
-            <div class="mt-2"><label for="price">Unit Price (INR):</label></div>
-            <div><input type="number" id="price" value="{{ estimate.preTaxAmount }}" readonly></div>
-            <div class="mt-2"><label for="qty">Quantity (in Grams):</label></div>
-            <div><input type="number" name="qty" id="qty" value="{{ estimate.quantity }}" step="1" oninput="handleInput('qty')"></div>
-            <div class="mt-2"><label for="pta">Pre-Tax Amount (INR):</label></div>
-            <div><input type="number" name="pta" id="pta" value="{{ estimate.preTaxAmount }}" step="0.01" oninput="handleInput('pta')"></div>
-            <div class="mt-2"><label for="cgstAmt">CGST @ {{ estimate.tax1Perc }} (%): </label></div>
-            <div><input type="number" name="cgstAmt" id="cgstAmt" value="{{ estimate.tax1Amt }}" readonly></div>
-            <div class="mt-2"><label for="sgstAmt">SGST @ {{ estimate.tax2Perc }} (%): </label></div>
-            <div><input type="number" name="sgstAmt" id="sgstAmt" value="{{ estimate.tax2Amt }}" readonly></div>
-            <div class="mt-2"><label for="taxAmount">Total Tax (INR):</label></div>
-            <div><input type="text" name="taxAmount" id="taxAmount" readonly value="{{ estimate.taxAmount }}"></div>
-            <div class="mt-2"><label for="totalAmount">Total Amount (INR):</label></div>
-            <div><input type="text" name="totalAmount" id="totalAmount" readonly value="{{ estimate.totalAmount }}"></div>
-            <div class="mt-2"><button id="validate-quote" class="btn btn-success" type="submit">Confirm and Pay</button></div>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <!-- PAGE HEADER -->
+            <div class="mb-4 text-center">
+                <h2 class="fw-bold">Buy Gold – Initial Quote</h2>
+                <p class="text-muted">Enter amount or quantity as per your requirement</p>
+            </div>
+
+            {% if estimate %}
+            <form method="POST" id="quote-form" action="{% url 'confirm_quote' %}">
+                {% csrf_token %}
+
+                <div class="card shadow-sm">
+                    <div class="card-body">
+
+                        <!-- TITLE -->
+                        <h5 class="fw-bold mb-3">
+                            {% if estimate.currencyPair == "XAU/INR" %}
+                                Gold (XAU → INR)
+                            {% elif estimate.currencyPair == "XAG/INR" %}
+                                Silver (XAG → INR)
+                            {% else %}
+                                {{ estimate.currencyPair }}
+                            {% endif %}
+                        </h5>
+
+                        <!-- REQUIRED HIDDEN FIELD -->
+                        <input type="hidden" name="currency-pair" value="{{ estimate.currencyPair }}">
+
+                        <!-- INPUT GRID -->
+                        <div class="row g-3">
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Unit Price (INR)</label>
+                                <input type="number" name="unitPriceAmt" class="form-control"
+                                       value="{{ estimate.preTaxAmount }}" readonly>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Quantity (g)</label>
+                                <input type="number" name="qty" id="qty" class="form-control"
+                                       value="{{ estimate.quantity }}" step="0.01" oninput="handleInput('qty')">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Pre-Tax Amount (INR)</label>
+                                <input type="number" name="pta" id="pta" class="form-control"
+                                       value="{{ estimate.preTaxAmount }}" step="0.01" oninput="handleInput('pta')">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">CGST @ {{ estimate.tax1Perc }}%</label>
+                                <input type="number" name="cgstAmt" id="cgstAmt" class="form-control"
+                                       value="{{ estimate.tax1Amt }}" readonly>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">SGST @ {{ estimate.tax2Perc }}%</label>
+                                <input type="number" name="sgstAmt" id="sgstAmt" class="form-control"
+                                       value="{{ estimate.tax2Amt }}" readonly>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Total Tax (INR)</label>
+                                <input type="text" name="taxAmount" id="taxAmount" class="form-control"
+                                       value="{{ estimate.taxAmount }}" readonly>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Total Amount (INR)</label>
+                                <input type="text" name="totalAmount" id="totalAmount" class="form-control"
+                                       value="{{ estimate.totalAmount }}" readonly>
+                            </div>
+
+                        </div>
+
+                        <!-- QUOTE METADATA -->
+                        <hr class="my-4">
+
+                        <div class="row g-3">
+
+                            <div class="col-md-6">
+                                <label class="form-label text-muted small">Quote ID</label>
+                                <input type="text" name="qid" class="form-control" value="{{ estimate.quoteId }}" readonly>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label text-muted small">Transaction Ref No</label>
+                                <input type="text" name="tid" class="form-control" value="{{ estimate.transactionRefNo }}" readonly>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label text-muted small">Customer Ref No</label>
+                                <input type="text" name="cid" class="form-control" value="{{ estimate.customerRefNo }}" readonly>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label text-muted small">Created At</label>
+                                <input type="text" name="createdAt" class="form-control" value="{{ estimate.createdAt }}" readonly>
+                            </div>
+
+                        </div>
+
+                        <!-- CTA BUTTONS -->
+                        <div class="mt-4">
+
+                            {% if user.is_authenticated %}
+                                <button type="submit"
+                                        class="btn btn-success w-100 py-2 fw-semibold">
+                                    Confirm & Pay
+                                </button>
+                            {% else %}
+                                <p class="text-center text-muted mb-2">Please log in to continue:</p>
+
+                                <a href="{% url 'signin' %}?next={{ request.path }}"
+                                   class="btn btn-warning w-100 mb-2 fw-semibold">
+                                    Login
+                                </a>
+
+                                <a href="{% url 'signup' %}?next={{ request.path }}"
+                                   class="btn btn-outline-warning w-100 fw-semibold">
+                                    Sign Up
+                                </a>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Hidden fields required by backend -->
+                <input type="hidden" name="tax1Perc" value="{{ estimate.tax1Perc }}">
+                <input type="hidden" name="tax2Perc" value="{{ estimate.tax2Perc }}">
+                <input type="hidden" name="taxType" value="{{ estimate.taxType }}">
+
+                <!-- Calculator JS Data -->
+                <div id="quote-data"
+                     data-cgst="{{ estimate.tax1Perc }}"
+                     data-sgst="{{ estimate.tax2Perc }}"
+                     data-unit-price="{{ estimate.preTaxAmount|floatformat:2 }}">
+                </div>
+
+            </form>
+
+            {% else %}
+            <div class="alert alert-warning text-center mt-4">
+                No estimate data available.
+            </div>
+            {% endif %}
+
         </div>
-        
-        <div style="margin-top: 10px"><label for="qid">Quote ID:</label></div>
-        <div><input type="text" name="qid" id="qid" value="{{ estimate.quoteId }}" readonly></div>
-        <div style="margin-top: 10px"><label for="tid">Transaction Ref No:</label></div>
-        <div><input type="text" name="tid" id="tid" value="{{ estimate.transactionRefNo }}" readonly></div>
-        <div style="margin-top: 10px"><label for="cid">Customer Ref No:</label></div>
-        <div><input type="text" name="cid" id="cid" value="{{ estimate.customerRefNo }}" readonly></div>
-        <div style="margin-top: 10px"><label for="createdAt">Created At:</label></div>
-        <div><input type="text" name="createdAt" id="createdAt" value="{{ estimate.createdAt }}" readonly></div>
     </div>
-    
-    <div id="quote-data"
-        data-cgst="{{ estimate.tax1Perc }}"
-        data-sgst="{{ estimate.tax2Perc }}"
-        data-unit-price="{{ estimate.preTaxAmount|floatformat:2 }}">
-    </div>
-    </form>
-    {% else %}
-        <p>No estimate data available.</p>
-    {% endif %}
-
 </div>
+
+
+<!-- REAL-TIME CALCULATION JS -->
+<script>
+function recalc() {
+
+    let qty = parseFloat(document.getElementById("qty").value) || 0;
+    let pta = parseFloat(document.getElementById("pta").value) || 0;
+
+    const cgstPerc = parseFloat(document.getElementById("quote-data").dataset.cgst);
+    const sgstPerc = parseFloat(document.getElementById("quote-data").dataset.sgst);
+    const unitPrice = parseFloat(document.getElementById("quote-data").dataset.unitPrice);
+
+    // If qty is edited → update pta
+    if (document.activeElement.id === "qty") {
+        pta = qty * unitPrice;
+        document.getElementById("pta").value = pta.toFixed(2);
+    }
+
+    // If pta is edited → update qty
+    if (document.activeElement.id === "pta") {
+        qty = pta / unitPrice;
+        document.getElementById("qty").value = qty.toFixed(2);
+    }
+
+    // Calculate taxes
+    const cgstAmt = (pta * cgstPerc) / 100;
+    const sgstAmt = (pta * sgstPerc) / 100;
+    const totalTax = cgstAmt + sgstAmt;
+    const totalAmount = pta + totalTax;
+
+    // Update UI
+    document.getElementById("cgstAmt").value = cgstAmt.toFixed(2);
+    document.getElementById("sgstAmt").value = sgstAmt.toFixed(2);
+    document.getElementById("taxAmount").value = totalTax.toFixed(2);
+    document.getElementById("totalAmount").value = totalAmount.toFixed(2);
+}
+
+// Auto-run on input
+document.addEventListener("input", recalc);
+
+// Manual trigger from HTML
+function handleInput(type) { recalc(); }
+</script>
+
 {% endblock %}
