@@ -188,7 +188,9 @@ def validate_quote(request):
     # clean quantity ("1.0000" → "1")
     try:
         #qty_clean = str(Decimal(qty_raw).normalize())
-        qty_clean = format(Decimal(qty_raw), "f")
+        #qty_clean = format(Decimal(qty_raw), "f")
+        qty_clean = format(Decimal(qty_raw).quantize(Decimal("0.0000")),"f")
+
 
     except Exception:
         messages.error(request, "Invalid quantity.")
@@ -204,42 +206,61 @@ def validate_quote(request):
         product_code = "XAU"
 
     # payload
+    # validate_data = {
+    #     "customerRefNo": request.POST.get('cid'),
+    #     "calculationType": "Q",
+    #     "preTaxAmount": fmt(pta_raw),
+    #     "quantity": qty_clean,
+    #     "quoteId": request.POST.get('qid'),
+
+    #     "tax1Amt": fmt(cgst_raw),
+    #     "tax2Amt": fmt(sgst_raw),
+    #     "taxAmount": fmt(tax_amount_raw),
+    #     "tax1Perc": tax1_perc,
+    #     "tax2Perc": tax2_perc,
+    #     "taxType": tax_type,
+
+    #     "unitPriceAmt": fmt(unit_price_raw),
+    #     "unitPrice": fmt(unit_price_raw),
+
+    #     "transactionDate": transaction_date,
+    #     "createdAt": transaction_date,
+    #     "transactionOrderID": transaction_refno,
+    #     #"transactionOrderID": str(uuid.uuid4()),
+
+    #     "transactionRefNo": transaction_refno,
+    #     #"transactionRefNo": str(uuid.uuid4()),
+
+    #     "productCode": product_code,
+    #     "assetCode": product_code,
+    #     "metalCode": product_code,
+    #     "instrumentCode": product_code,
+    #     "metalType": metal_type,
+
+    #     "totalAmount": fmt(request.POST.get('totalAmount')),
+    #     "currencyPair": currency_pair,
+    #     "transactionType": request.POST.get('type') or "BUY",
+    #     "type": request.POST.get('type') or "BUY",
+    # }
     validate_data = {
-        "customerRefNo": request.POST.get('cid'),
-        "calculationType": "Q",
-        "preTaxAmount": fmt(pta_raw),
-        "quantity": qty_clean,
-        "quoteId": request.POST.get('qid'),
+    "customerRefNo": request.POST.get("cid"),
+    "calculationType": "A",
 
-        "tax1Amt": fmt(cgst_raw),
-        "tax2Amt": fmt(sgst_raw),
-        "taxAmount": fmt(tax_amount_raw),
-        "tax1Perc": tax1_perc,
-        "tax2Perc": tax2_perc,
-        "taxType": tax_type,
+    "preTaxAmount": fmt(pta_raw),
+    "quantity": qty_clean,              # "7.0000"
+    "quoteId": request.POST.get("qid"),
 
-        "unitPriceAmt": fmt(unit_price_raw),
-        "unitPrice": fmt(unit_price_raw),
+    "tax1Amt": fmt(cgst_raw),
+    "tax2Amt": fmt(sgst_raw),
+    "taxAmount": fmt(tax_amount_raw),
 
-        "transactionDate": transaction_date,
-        "createdAt": transaction_date,
-        "transactionOrderID": transaction_refno,
-        #"transactionOrderID": str(uuid.uuid4()),
+    "transactionDate": transaction_date,
+    "transactionOrderID": transaction_refno,
 
-        "transactionRefNo": transaction_refno,
-        #"transactionRefNo": str(uuid.uuid4()),
+    "totalAmount": fmt(request.POST.get("totalAmount")),
+}
 
-        "productCode": product_code,
-        "assetCode": product_code,
-        "metalCode": product_code,
-        "instrumentCode": product_code,
-        "metalType": metal_type,
 
-        "totalAmount": fmt(request.POST.get('totalAmount')),
-        "currencyPair": currency_pair,
-        "transactionType": request.POST.get('type') or "BUY",
-        "type": request.POST.get('type') or "BUY",
-    }
 
     # remove None
     validate_data = {k: v for k, v in validate_data.items() if v is not None}
