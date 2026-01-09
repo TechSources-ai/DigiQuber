@@ -22,6 +22,7 @@ from django.conf import settings
 
 
 def send_confirmation_email(email, token):
+     print("🔥 send_confirmation_email called for:", email)
     try:
         client = EmailClient.from_connection_string(
             settings.AZURE_EMAIL_CONNECTION_STRING
