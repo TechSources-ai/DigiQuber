@@ -334,7 +334,7 @@ from django.contrib.auth import login, logout
 from app_user.models import Profile
 from django.conf import settings
 from app_shop.utils import make_post
-
+from django_ratelimit.decorators import ratelimit
 
 from app_user.forms import ProfileForm
 
@@ -583,7 +583,7 @@ def complete_details_view(request):
 
     return render(request, 'app_login/update_details.html', {'form': form})
 
-
+# @ratelimit(key='ip', rate='5/m', method='POST', block=True)
 def signin_view(request):
     if request.method == 'POST':
         form = SigninForm(request.POST)

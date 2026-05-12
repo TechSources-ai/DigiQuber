@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="hero-section" style="min-height: 80vh; display: flex; align-items: center;">
+  <div class="container text-center py-5">
+
+    <div class="mb-4">
+      <i class="bi bi-shield-exclamation" style="font-size: 4rem; color: #f4c542;"></i>
+    </div>
+
+    <h1 class="fw-bold text-white mb-3">
+      Too Many Requests
+    </h1>
+
+    <p class="text-light fs-5 mb-2">
+      You have made too many requests in a short period.
+    </p>
+
+    <p class="text-light mb-4">
+      Please wait <span id="countdown" class="fw-bold" style="color: #f4c542;">60</span> seconds before trying again.
+    </p>
+
+    <!-- Progress Bar -->
+    <div class="progress mb-4 mx-auto" style="max-width: 400px; height: 6px; background: #222;">
+      <div id="progress-bar"
+           class="progress-bar"
+           style="width: 100%; background: linear-gradient(90deg, #f4c542, #c59d43); transition: width 1s linear;">
+      </div>
+    </div>
+
+    <!-- Button (disabled until timer ends) -->
+    <button id="retry-btn"
+            class="btn btn-warning fw-semibold px-5 py-2 rounded-pill"
+            disabled
+            onclick="window.history.back()">
+      Please Wait...
+    </button>
+
+    <div class="mt-4">
+      <a href="{% url 'home' %}" class="text-muted small">
+        Return to Home
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  const totalSeconds = 60;
+  let remaining = totalSeconds;
+
+  const countdownEl = document.getElementById('countdown');
+  const progressBar = document.getElementById('progress-bar');
+  const retryBtn = document.getElementById('retry-btn');
+
+  const timer = setInterval(() => {
+    remaining -= 1;
+    countdownEl.textContent = remaining;
+
+    // Update progress bar
+    const percent = (remaining / totalSeconds) * 100;
+    progressBar.style.width = percent + '%';
+
+    if (remaining <= 0) {
+      clearInterval(timer);
+      retryBtn.disabled = false;
+      retryBtn.textContent = 'Try Again';
+      retryBtn.classList.add('pulse');
+    }
+  }, 1000);
+</script>
+
+<style>
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(244, 197, 66, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(244, 197, 66, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(244, 197, 66, 0); }
+  }
+  .pulse {
+    animation: pulse 1.5s infinite;
+  }
+</style>
+
+{% endblock %}

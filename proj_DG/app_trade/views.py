@@ -16,6 +16,7 @@ from decimal import Decimal, InvalidOperation
 from datetime import datetime
 from app_shop.utils import make_post
 import uuid
+from django_ratelimit.decorators import ratelimit
 
 def post_login_handler(request):
     next_url = request.session.get('next', '/')
@@ -110,6 +111,8 @@ def generate_quote(request):
             return render(request, 'app_shop/validateQuote.html', {'estimate': response['data']})
     return render(request, 'app_shop/validateQuote.html', {'estimate': response['data']})
 
+
+# @ratelimit(key='ip', rate='10/m', method='POST', block=True)
 def validate_quote(request):
     from decimal import Decimal, InvalidOperation
 

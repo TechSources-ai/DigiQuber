@@ -41,4 +41,5 @@ function updateHomePrices() {
 updateHomePrices();
 
 // Update every 5 seconds (unchanged)
-setInterval(updateHomePrices, 5000);
+// setInterval(updateHomePrices, 5000);
+setInterval(updateHomePrices, 60000);

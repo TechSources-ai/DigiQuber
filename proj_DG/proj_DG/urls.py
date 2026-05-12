@@ -1,6 +1,9 @@
 from django.contrib import admin
 from django.urls import path, include
 
+# handler429 = 'proj_DG.views.ratelimited_error'
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('app_login.urls')),

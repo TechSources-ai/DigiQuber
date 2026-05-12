@@ -99,6 +99,7 @@
           </div>
 
           <!-- ADMIN DROPDOWN -->
+            {% if user.is_superuser %}
           <div class="dropdown">
             <a class="text-white fw-semibold text-decoration-none dropdown-toggle"
                href="#"
@@ -113,6 +114,7 @@
               </li>
             </ul>
           </div>
+           {% endif %}
 
         {% else %}
           <a href="{% url 'signin' %}" class="text-white fw-semibold text-decoration-none">Login</a>

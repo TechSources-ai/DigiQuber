@@ -1,11 +1,25 @@
-<h2>Verify Email OTP</h2>
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card bg-dark text-white p-4 shadow-lg" style="width: 100%; max-width: 400px; border-radius: 15px; background-color: #121212 !important;">
+        <h3 class="text-center fw-bold mb-3">Verify OTP</h3>
+        <p class="text-center text-secondary small">Enter the code sent to your device</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <input type="text" name="otp" class="form-control bg-light border-0 text-center fw-bold py-3" placeholder="0 0 0 0 0 0" required style="font-size: 20px; letter-spacing: 5px;">
+            </div>
+            <button type="submit" class="btn btn-warning w-100 fw-bold py-2" style="background-color: #f0c661; border: none; color: #121212;">
+                Verify Account
+            </button>
+        </form>
 
-<form method="post">
-  {% csrf_token %}
-  <input type="text" name="otp" placeholder="Enter OTP" required />
-  <button type="submit">Verify</button>
-</form>
-
-{% if error %}
-  <p style="color:red">{{ error }}</p>
-{% endif %}
+        {% if error %}
+            <div class="alert alert-danger mt-3 py-2 small text-center bg-transparent border-danger text-danger">
+                {{ error }}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

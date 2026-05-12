@@ -21,6 +21,7 @@ from django.contrib import messages
 from django.utils import timezone
 from app_shop.models import Transaction
 import razorpay
+from django_ratelimit.decorators import ratelimit
 
 from app_shop.utils import make_post
 from .models import PaymentRecord
@@ -271,6 +272,7 @@ def execute_mmtc_order(payment_record):
     return response
 
 
+# @ratelimit(key='ip', rate='10/m', method=['GET', 'POST'], block=True)
 def payment_page(request):
     amount_paise = request.session.get("payment_amount")
     if not amount_paise:

@@ -5,6 +5,7 @@ from datetime import timedelta
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django_ratelimit.decorators import ratelimit
 
 from app_user.models import Profile
 from .models import APIToken
@@ -420,6 +421,7 @@ def balance_page(request):
 
     return render(request, "app_shop/balance.html", context)
 
+# @ratelimit(key='ip', rate='20/m', method=['GET', 'POST'], block=True)
 def tradeEstimateView(request, param1=None):
     """
     Original flow preserved.

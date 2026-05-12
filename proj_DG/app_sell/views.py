@@ -11,6 +11,7 @@ from app_shop.utils import get_token
 from .models import SellQuote, SellTransaction
 from .services import get_sell_quote, execute_sell_order,  validate_sell_quote_pg
 from .models import SellQuote, SellTransaction
+from django_ratelimit.decorators import ratelimit
 
 
 # ----------------------------
@@ -108,7 +109,7 @@ def sell_quote_view(request):
         "expires_at": sell_quote.expires_at,
     })
 
-
+# @ratelimit(key='ip', rate='5/m', method='POST', block=True)
 @login_required
 def sell_confirm_view(request):
     if request.method != "POST":
